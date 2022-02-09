@@ -98,7 +98,7 @@ a:focus {
 	align-items: center;
 	justify-content: center;
 	padding: 10px;
-	color: #6236FF;
+	color: #FFFFFF;
 	position: relative
 }
 
@@ -154,7 +154,7 @@ a:focus {
 }
 
 .appHeader.bg-primary:before {
-	background: #6236FF !important
+	background: #cf3d3c !important
 }
 
 .appHeader.bg-secondary:before {
@@ -279,7 +279,7 @@ a:focus {
 	align-items: center;
 	justify-content: center;
 	border-radius: 200px;
-	background: #6236FF
+	background: #cf3d3c
 }
 
 .appBottomMenu .item .action-button.large {
@@ -310,7 +310,7 @@ a:focus {
 }
 
 .appBottomMenu .item.active:before {
-	background: #6236FF
+	background: #cf3d3c
 }
 
 .appBottomMenu .item.active .icon,
@@ -1159,14 +1159,14 @@ blockquote.blockquote .blockquote-footer {
 	right: 0;
 	bottom: 0;
 	z-index: 99999;
-	background: #6236FF;
+	background: #cf3d3c;
 	display: flex;
 	align-items: center;
 	justify-content: center
 }
 
 #loader .loading-icon {
-	width: 42px;
+	width: 100px;
 	height: auto;
 	animation: loadingAnimation 1s infinite
 }
@@ -1752,8 +1752,8 @@ a.badge-dark {
 }
 
 .btn-primary {
-	background: #6236FF !important;
-	border-color: #6236FF !important;
+	background: #cf3d3c !important;
+	border-color: #cf3d3c !important;
 	color: #FFFFFF !important
 }
 
@@ -1761,14 +1761,14 @@ a.badge-dark {
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active {
-	background: #4e1dff !important;
-	border-color: #4e1dff !important
+	background: #e20a0a !important;
+	border-color: #e20a0a !important
 }
 
 .btn-primary.disabled,
 .btn-primary:disabled {
-	background: #6236FF;
-	border-color: #6236FF;
+	background: #cf3d3c;
+	border-color: #cf3d3c;
 	opacity: 0.5
 }
 
@@ -3020,7 +3020,7 @@ a.badge-dark {
 }
 
 .bg-primary {
-	background: #6236FF !important;
+	background: #cf3d3c !important;
 	color: #FFF
 }
 
@@ -5121,7 +5121,7 @@ textarea,
 	content: "";
 	display: block;
 	height: 140px;
-	background: #6236FF
+	background: #cf3d3c
 }
 
 .wallet-card {
