@@ -93,7 +93,9 @@ export default function Setup() {
 
 			<div className="appHeader bg-primary text-light">
 				<div className="left"></div>
-				<div className="pageTitle">Rumsan Wallet</div>
+				<div className="pageTitle">
+					<i>Hamro</i>&nbsp;LifeBank Wallet
+				</div>
 			</div>
 
 			<div id="appCapsule">
@@ -169,7 +171,7 @@ export default function Setup() {
 							className="btn btn-lg btn-block btn-primary"
 						>
 							<IoWalletOutline className="ion-icon" aria-label="Create New Wallet" />
-							Create a new Rumsan Wallet
+							Create a new<i>&nbsp;Hamro&nbsp;</i>LifeBank Wallet
 						</button>
 					</div>
 				) : (
