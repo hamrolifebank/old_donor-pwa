@@ -18,6 +18,8 @@ import Assets from '../tokens';
 import TokenDetails from '../tokens/details';
 import Vault from '../vault';
 import GoogleBackup from '../misc/googleBackup';
+import Events from '../events';
+import DonationHistory from '../donationHistory';
 
 function App() {
 	const { initApp, wallet } = useContext(AppContext);
@@ -33,6 +35,8 @@ function App() {
 			<Header />
 			<Switch>
 				<Route exact path="/" component={Main} />
+				<PrivateRoute exact path="/events" component={Events} wallet={wallet} />
+				<PrivateRoute exact path="/donation-history" component={DonationHistory} wallet={wallet} />
 				<PrivateRoute exact path="/backup" component={BackupWallet} wallet={wallet} />
 				<PrivateRoute exact path="/networks" component={NetworkSettings} wallet={wallet} />
 				<PrivateRoute exact path="/import-token" component={ImportToken} wallet={wallet} />
