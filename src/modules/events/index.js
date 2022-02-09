@@ -1,11 +1,16 @@
 import React from 'react';
+import AppHeader from '../layouts/AppHeader';
+import Events from './events';
+import { EventsContextProvider } from '../../contexts/EventsContext';
 
-export default function Events() {
+export default function Index() {
+	const fetchList = query => {};
 	return (
-		<div>
-			<div className="mt-5">This is the events page</div>
-
-			<div>This is the events page</div>
-		</div>
+		<>
+			<EventsContextProvider>
+				<AppHeader currentMenu="Events" />
+				<Events />
+			</EventsContextProvider>
+		</>
 	);
 }
