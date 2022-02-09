@@ -20,7 +20,7 @@ export default function Header() {
 					</div>
 					<div className="pageTitle">
 						<img src="assets/img/icon/rumsan-white-72.png" width="22" alt="logo" className="logo" />
-						&nbsp; Rumsan Wallet
+						&nbsp;<i>Hamro</i>&nbsp;LifeBank Wallet
 					</div>
 					<div className="right">
 						<a
