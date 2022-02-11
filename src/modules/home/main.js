@@ -29,7 +29,7 @@ export default function Main() {
 		<>
 			{showPageLoader && (
 				<div id="loader">
-					<img src="/assets/img/icon/hlb-white-512.png" alt="icon" class="loading-icon" />
+					<img src="/assets/img/icon/hlb-white-512.png" alt="icon" className="loading-icon" />
 				</div>
 			)}
 
