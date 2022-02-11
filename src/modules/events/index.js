@@ -4,7 +4,6 @@ import Events from './events';
 import { EventsContextProvider } from '../../contexts/EventsContext';
 
 export default function Index() {
-	const fetchList = query => {};
 	return (
 		<>
 			<EventsContextProvider>
