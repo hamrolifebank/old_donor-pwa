@@ -1,15 +1,15 @@
 {
-  "name": "Rumsan Wallet",
-  "short_name": "Rumsan Wallet",
+  "name": "Hamro LifeBank Wallet",
+  "short_name": "HLB Wallet",
   "start_url": ".",
   "display": "standalone",
   "scope" : ".",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#cf3d3c",
   "orientation": "portrait",
   "icons": [
       {
-        "src": "favicon.ico",
+        "src": "assets/img/icon/hlb-72.png",
         "sizes": "64x64 32x32 24x24 16x16",
         "type": "image/x-icon"
       },
