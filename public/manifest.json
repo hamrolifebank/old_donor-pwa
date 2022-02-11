@@ -14,7 +14,7 @@
         "type": "image/x-icon"
       },
       {
-          "src": "assets/img/icon/72x72.png",
+          "src": "assets/img/icon/hlb-72.png",
           "type": "image/png",
           "sizes": "72x72",
           "purpose": "any maskable"
@@ -44,7 +44,7 @@
           "purpose": "any maskable"
       },
       {
-          "src": "assets/img/icon/192x192.png",
+          "src": "assets/img/icon/hlb-192.png",
           "type": "image/png",
           "sizes": "192x192",
           "purpose": "any maskable"
@@ -56,7 +56,7 @@
           "purpose": "any maskable"
       },
       {
-          "src": "assets/img/icon/512x512.png",
+          "src": "assets/img/icon/hlb-512.png",
           "type": "image/png",
           "sizes": "512x512",
           "purpose": "any maskable"
