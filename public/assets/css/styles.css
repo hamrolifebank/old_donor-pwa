@@ -6620,3 +6620,13 @@ input.pwd {
 	background: transparent !important;
 	color: #FFF !important;
 }
+
+.card-responsive {
+    width: 50%;
+}
+
+@media only screen and (max-width: 600px) {
+  .card-responsive {
+    width: 100%;
+  }
+}
