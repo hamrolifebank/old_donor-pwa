@@ -10,9 +10,21 @@ export function get(query) {
 		axios
 			.get(`${API.EVENTS}?${qs.stringify(query)}`)
 			.then(res => resolve(res.data))
-			.catch(err => {
-				console.log(err);
-				reject(err.response.data);
+			.catch(e => {
+				console.log(e);
+				reject(e);
+			});
+	});
+}
+
+export function registerUserToEvent(eventId, payload) {
+	return new Promise((resolve, reject) => {
+		axios
+			.post(`${API.EVENTS}/${eventId}/register`, payload)
+			.then(res => resolve(res))
+			.catch(e => {
+				console.log(e);
+				reject(e);
 			});
 	});
 }

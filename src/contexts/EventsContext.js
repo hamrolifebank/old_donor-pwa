@@ -18,10 +18,19 @@ export const EventsContextProvider = ({ children }) => {
 		return new Promise((resolve, reject) => {
 			Service.get(query)
 				.then(res => {
+					console.log(res);
 					dispatch({ type: ACTION.LIST_SUCCESS, res });
 					resolve(res);
 				})
-				.catch(err => reject(err));
+				.catch(e => reject(e));
+		});
+	};
+
+	const registerUserToEvent = (eventId, payload) => {
+		return new Promise((resolve, reject) => {
+			Service.registerUserToEvent(eventId, payload)
+				.then(res => resolve(res))
+				.catch(e => reject(e));
 		});
 	};
 
@@ -32,7 +41,8 @@ export const EventsContextProvider = ({ children }) => {
 				loading: state.loading,
 				pagination: state.pagination,
 				eventDetails: state.eventDetails,
-				listEvents
+				listEvents,
+				registerUserToEvent
 			}}
 		>
 			{children}
