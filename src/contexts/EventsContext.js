@@ -18,7 +18,6 @@ export const EventsContextProvider = ({ children }) => {
 		return new Promise((resolve, reject) => {
 			Service.get(query)
 				.then(res => {
-					console.log(res);
 					dispatch({ type: ACTION.LIST_SUCCESS, res });
 					resolve(res);
 				})
