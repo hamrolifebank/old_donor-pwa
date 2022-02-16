@@ -23,11 +23,6 @@ export default function Events() {
 	const [gmailModal, setGmailModal] = useState(false);
 	const [loginPayload, setLoginPayload] = useState({});
 
-	// const [userDetails, setUserDetails] = useState[''];
-	// const [userName, setUserName] = useState[''];
-	// const [userPhone, setUserPhone] = useState[''];
-	// const [userEmail, setUserEmail] = useState[''];
-	// const [userBloodGroup, setUserBloodGroup] = useState[''];
 	const inputRef = useRef(null);
 
 	const fetchList = query => {
@@ -64,14 +59,7 @@ export default function Events() {
 
 	const handleUserDetailsFormSubmit = async e => {
 		e.preventDefault();
-		// const obj = {
-		// 	name: user.name,
-		// 	number: user.number,
-		// 	email: user.email,
-		// 	bloodGroup: user.bloodGroup
-		// };
 		await DataService.save('user', user);
-		// setUser(obj);
 		setUserDetailModal(false);
 	};
 
