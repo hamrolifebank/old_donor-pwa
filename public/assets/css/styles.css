@@ -6632,6 +6632,12 @@ input.pwd {
 	padding: 20px;
 }
 
+.alert-danger-custom{
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+}
+
 @media only screen and (max-width: 600px) {
   .card-responsive {
     width: 100%;
