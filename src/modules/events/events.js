@@ -64,8 +64,8 @@ export default function Events() {
 	};
 
 	const handleSignIn = option => {
-		setLoginModal(false);
 		if (option === 'email') {
+			setLoginModal(false);
 			setEmailModal(true);
 		} else if (option === 'gmail') {
 		} else if (option === 'facebook') {
@@ -274,7 +274,7 @@ export default function Events() {
 							<button
 								className="btn btn-circle btn-xl"
 								style={{ backgroundColor: '#4267B2' }}
-								onClick={() => handleSignIn('email')}
+								onClick={() => handleSignIn('facebook')}
 							>
 								<i className="fa-brands fa-facebook-f" style={{ color: '#fff' }}></i>
 							</button>
@@ -283,7 +283,7 @@ export default function Events() {
 							<button
 								className="btn btn-circle btn-xl"
 								style={{ backgroundColor: '#DB4437' }}
-								onClick={() => handleSignIn('email')}
+								onClick={() => handleSignIn('google')}
 							>
 								<i className="fa-brands fa-google" style={{ color: '#fff' }}></i>
 							</button>
