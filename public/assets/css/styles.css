@@ -6625,6 +6625,13 @@ input.pwd {
     width: 50%;
 }
 
+.login-quote, .login-quote > h3 {
+	background-color: #c72020;
+	color: #ffffff !important;
+	text-align: center;
+	padding: 20px;
+}
+
 @media only screen and (max-width: 600px) {
   .card-responsive {
     width: 100%;
