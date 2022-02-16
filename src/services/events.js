@@ -11,8 +11,7 @@ export function get(query) {
 			.get(`${API.EVENTS}?${qs.stringify(query)}`)
 			.then(res => resolve(res.data))
 			.catch(e => {
-				console.log(e);
-				reject(e);
+				reject(e.response);
 			});
 	});
 }
@@ -23,8 +22,7 @@ export function registerUserToEvent(eventId, payload) {
 			.post(`${API.EVENTS}/${eventId}/register`, payload)
 			.then(res => resolve(res))
 			.catch(e => {
-				console.log(e);
-				reject(e);
+				reject(e.response);
 			});
 	});
 }
