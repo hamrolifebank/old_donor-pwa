@@ -8,7 +8,7 @@ const Auth = {
 			axios
 				.post(`${API.SERVER_URL}/login_process`, payload)
 				.then(res => resolve(res.data))
-				.catch(e => reject(e));
+				.catch(e => reject(e.response));
 		});
 	}
 };
