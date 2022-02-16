@@ -1,4 +1,5 @@
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 import AppHeader from '../layouts/AppHeader';
 import Events from './events';
 import { EventsContextProvider } from '../../contexts/EventsContext';
@@ -6,10 +7,12 @@ import { EventsContextProvider } from '../../contexts/EventsContext';
 export default function Index() {
 	return (
 		<>
-			<EventsContextProvider>
-				<AppHeader currentMenu="Events" />
-				<Events />
-			</EventsContextProvider>
+			<CookiesProvider>
+				<EventsContextProvider>
+					<AppHeader currentMenu="Events" />
+					<Events />
+				</EventsContextProvider>
+			</CookiesProvider>
 		</>
 	);
 }
