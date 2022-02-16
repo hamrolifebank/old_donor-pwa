@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
+import { useCookies } from 'react-cookie';
 import { useToasts } from 'react-toast-notifications';
-import { Card, Row, Col, Button, Container } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import jwtDecode from 'jwt-decode';
 import DataService from '../../services/db';
 import ModalWrapper from '../global/ModalWrapper';
 
@@ -12,6 +14,7 @@ import { AppContext } from '../../contexts/AppContext';
 import authService from '../../services/auth';
 
 export default function Events() {
+	const [cookies, setCookie] = useCookies(['access_token', 'user', 'permissions']);
 	const { addToast } = useToasts();
 	const { listEvents, pagination, events, registerUserToEvent } = useContext(EventsContext);
 	const { wallet } = useContext(AppContext);
@@ -38,20 +41,51 @@ export default function Events() {
 			});
 	};
 
+	const setUserInfoFromCookies = async () => {
+		await setUser(prev => ({
+			...prev,
+			name: cookies.user.name.first ? `${cookies.user.name.first} ${cookies.user.name.last}` : ''
+		}));
+		await setUser(prev => ({ ...prev, email: cookies.user.email ? cookies.user.email : '' }));
+		await setUser(prev => ({ ...prev, phone: cookies.user.phone ? cookies.user.phone : '' }));
+		await setUser(prev => ({ ...prev, user_id: cookies.user.id ? cookies.user.id : '' }));
+		await setUser(prev => ({ ...prev, gender: cookies.user.gender ? cookies.user.gender : '' }));
+		await setUser(prev => ({ ...prev, access_token: cookies.access_token ? cookies.access_token : '' }));
+	};
+
+	const getAdditionalUserInfo = async () => {
+		setUserDetailModal(true);
+		setUserInfoFromCookies();
+	};
+
 	const handleRegister = async eventId => {
-		//await DataService.remove('user');
-		//const userData = await DataService.get('user');
-		const userToken = localStorage.getItem('access_token');
-		if (userToken !== null) {
-			userData.walletAddress = wallet.address;
-			console.log(eventId, userData);
-			registerUserToEvent(eventId, userData)
-				.then(d => {
-					Swal.fire('SUCCESS', 'Registration successful!', 'success');
-				})
-				.catch(e => {
-					Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
-				});
+		const userToken = cookies.access_token;
+		if (userToken && userToken.length > 0) {
+			if (!user || !user.name || !user.email || !user.phone || !user.gender || !user.bloodGroup) {
+				getAdditionalUserInfo()
+					.then()
+					.catch(e => {
+						console.log(e.data.message);
+						Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
+					});
+			}
+			// const userData = {
+			// 	name: `${cookies.user.name.first} ${cookies.user.name.last}`,
+			// 	email: cookies.user.email,
+			// 	phone: cookies.user.phone,
+			// 	user_id: cookies.user.id || null,
+			// 	walletAddress: wallet.address
+			// };
+			if (user && user.name && user.email && user.phone && user.gender && user.bloodGroup) {
+				registerUserToEvent(eventId, user)
+					.then(d => {
+						Swal.fire('SUCCESS', 'Registration successful!', 'success');
+					})
+					.catch(e => {
+						console.log(e.data.message);
+						Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
+					});
+			}
 		} else {
 			setLoginModal(true);
 		}
@@ -72,6 +106,17 @@ export default function Events() {
 		}
 	};
 
+	const isTokenValid = tokenExp => {
+		if (Date.now() >= tokenExp * 1000) return false;
+		return true;
+	};
+
+	const toggleLoginFailAlert = display => {
+		let elem = document.getElementById('emailLoginFail');
+		if (display === true) elem.style.display = 'block';
+		else elem.style.display = 'none';
+	};
+
 	const handleEmailSubmit = async e => {
 		e.preventDefault();
 		let payload = loginPayload;
@@ -82,11 +127,40 @@ export default function Events() {
 		}
 		try {
 			const response = await authService.login(payload);
-			console.log(response);
+			if (response) {
+				console.log(response);
+				toggleLoginFailAlert(false);
+				const decodedToken = jwtDecode(response.user.token);
+				console.log(new Date(decodedToken.exp * 1000));
+				if (isTokenValid(decodedToken.exp)) {
+					setCookie('access_token', response.user.token, {
+						path: '/'
+					});
+					setCookie('user', JSON.stringify(response.user), {
+						path: '/'
+					});
+					setCookie('permissions', response.permissions, {
+						path: '/'
+					});
+					await setUserInfoFromCookies();
+					await DataService.save('user');
+				} else {
+					throw { data: { message: 'Token has expired' } };
+				}
+				document.getElementById('emailForm').reset();
+				setEmailModal(false);
+				addToast('You have logged in succesfully', {
+					appearance: 'success',
+					autoDismiss: true
+				});
+			}
 		} catch (error) {
-			let elem = document.getElementById('emailLoginFail');
-			elem.style.display = 'block';
-			console.log('error:', error);
+			toggleLoginFailAlert(true);
+			addToast(error.data.message, {
+				appearance: 'error',
+				autoDismiss: true
+			});
+			console.log('error:', error.data);
 		}
 	};
 
@@ -102,6 +176,12 @@ export default function Events() {
 	useEffect(
 		() => {
 			fetchList();
+			const setInitialUserData = async () => {
+				//await DataService.remove('user');
+				const userData = await DataService.get('user');
+				if (userData) setUser(userData);
+			};
+			setInitialUserData();
 		}, // eslint-disable-next-line
 		[]
 	);
@@ -175,6 +255,7 @@ export default function Events() {
 								className="form-control"
 								ref={inputRef}
 								required
+								value={user.name}
 								onChange={e => setUser(user => ({ ...user, name: e.target.value }))}
 							/>
 						</div>
@@ -185,6 +266,7 @@ export default function Events() {
 								type="text"
 								className="form-control"
 								required
+								value={user.phone}
 								onChange={e => setUser(user => ({ ...user, phone: e.target.value }))}
 							/>
 						</div>
@@ -195,6 +277,7 @@ export default function Events() {
 								type="email"
 								className="form-control"
 								required
+								value={user.email}
 								onChange={e => setUser(user => ({ ...user, email: e.target.value }))}
 							/>
 						</div>
@@ -205,7 +288,7 @@ export default function Events() {
 								className="form-control"
 								required
 								onChange={e => setUser(user => ({ ...user, gender: e.target.value }))}
-								defaultValue=""
+								value={user.gender ? user.gender : ''}
 							>
 								<option disabled value="">
 									Select gender
@@ -222,7 +305,7 @@ export default function Events() {
 								className="form-control"
 								required
 								onChange={e => setUser(user => ({ ...user, bloodGroup: e.target.value }))}
-								defaultValue=""
+								value={user.bloodGroup ? user.bloodGroup : ''}
 							>
 								<option disabled value="">
 									Select a blood group
