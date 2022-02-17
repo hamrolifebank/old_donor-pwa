@@ -11,11 +11,16 @@ export const UserContextProvider = ({ children }) => {
 		return AuthService.loginGoogle(payload);
 	};
 
+	const facebookLogin = payload => {
+		return AuthService.loginFacebook(payload);
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
 				emailLogin,
-				googleLogin
+				googleLogin,
+				facebookLogin
 			}}
 		>
 			{children}

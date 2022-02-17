@@ -32,6 +32,21 @@ const Auth = {
 				})
 				.catch(e => reject(e.response));
 		});
+	},
+
+	loginFacebook(payload) {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(`${API.BASE_URL}/users/auth/facebookLogin`, payload)
+				.then(async res => {
+					saveUser(res.data.user);
+					saveUserToken(res.data.token);
+					saveUserRoles(res.data.user.roles);
+					await DataService.save('user', { user_id: res.data.user.id });
+					resolve(res.data);
+				})
+				.catch(e => reject(e.response));
+		});
 	}
 };
 

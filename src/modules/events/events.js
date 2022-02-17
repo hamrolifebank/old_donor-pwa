@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import jwtDecode from 'jwt-decode';
 import DataService from '../../services/db';
 import ModalWrapper from '../global/ModalWrapper';
-import CLIENTID from '../../constants/clientId';
+import APPID from '../../constants/clientId';
 import { EventsContext } from '../../contexts/EventsContext';
 import { AppContext } from '../../contexts/AppContext';
 import { UserContext } from '../../contexts/UserContext';
@@ -16,7 +17,7 @@ import { getUser, saveUser, saveUserToken, saveUserRoles, getUserToken } from '.
 export default function Events() {
 	const { addToast } = useToasts();
 	const { listEvents, pagination, events, registerUserToEvent } = useContext(EventsContext);
-	const { emailLogin, googleLogin } = useContext(UserContext);
+	const { emailLogin, googleLogin, facebookLogin } = useContext(UserContext);
 	const { wallet } = useContext(AppContext);
 	const [user, setUser] = useState({});
 	const [userDetailModal, setUserDetailModal] = useState(false);
@@ -57,7 +58,7 @@ export default function Events() {
 
 	const handleRegisterToEvent = async eventId => {
 		const userToken = getUserToken();
-		if (userToken && userToken.length > 0) {
+		if (userToken && userToken !== 'undefined' && userToken.length > 0) {
 			let currentUser = await DataService.get('user');
 
 			if (
@@ -98,8 +99,9 @@ export default function Events() {
 	const handleUserDetailsFormSubmit = async e => {
 		e.preventDefault();
 		let currentUser = await DataService.get('user');
-		currentUser = { ...currentUser, user };
-
+		console.log('currentUser in indexdb', currentUser);
+		currentUser = { ...currentUser, ...user };
+		console.log('userData saved to indexdb', currentUser);
 		await DataService.save('user', currentUser);
 		setUserDetailModal(false);
 	};
@@ -167,6 +169,7 @@ export default function Events() {
 	};
 
 	const responseGoogle = async response => {
+		console.log('google response:', response);
 		if (response.error === 'popup_closed_by_user') return;
 		const { profileObj } = response;
 		try {
@@ -182,16 +185,25 @@ export default function Events() {
 				//window.location.replace('/');
 			} else throw new Error('User email must be from Rumsan Group of Companies');
 		} catch (e) {
-			let erroMsg = e.message;
-			erroMsg =
-				e && e.message !== 'Request failed with status code 500'
-					? e.message
-					: 'User Account Suspended. Contact Rumsan Admin.';
 			Swal.fire('ERROR', e.message, 'error');
 			addToast(erroMsg, {
 				appearance: 'error',
 				autoDismiss: true
 			});
+		}
+	};
+
+	const responseFacebook = async response => {
+		console.log('facebook response:', response);
+		try {
+			await facebookLogin(response);
+			setLoginModal(false);
+			addToast('You have logged in succesfully', {
+				appearance: 'success',
+				autoDismiss: true
+			});
+		} catch (e) {
+			Swal.fire('ERROR', e, 'error');
 		}
 	};
 
@@ -201,7 +213,6 @@ export default function Events() {
 			const setInitialUserData = async () => {
 				//await DataService.remove('user');
 				const userData = await DataService.get('user');
-
 				if (userData) {
 					setUser(userData);
 				}
@@ -382,13 +393,22 @@ export default function Events() {
 					</div>
 					<Row>
 						<Col xs={4} className="text-center">
-							<button
-								className="btn btn-circle btn-xl"
-								style={{ backgroundColor: '#4267B2' }}
-								onClick={() => handleSignIn('facebook')}
-							>
-								<i className="fa-brands fa-facebook-f" style={{ color: '#fff' }}></i>
-							</button>
+							<FacebookLogin
+								render={renderProps => (
+									<button
+										className="btn btn-circle btn-xl"
+										style={{ backgroundColor: '#4267B2' }}
+										onClick={renderProps.onClick}
+										disabled={renderProps.disabled}
+									>
+										<i className="fa-brands fa-facebook-f" style={{ color: '#fff' }}></i>
+									</button>
+								)}
+								appId={APPID.facebookId}
+								autoLoad={true}
+								fields="name,email,picture"
+								callback={responseFacebook}
+							/>
 						</Col>
 						<Col xs={4} className="text-center">
 							<GoogleLogin
@@ -403,7 +423,7 @@ export default function Events() {
 									</button>
 								)}
 								className="btn"
-								clientId={CLIENTID.clientId}
+								clientId={APPID.googleId}
 								buttonText="Login with Google"
 								onSuccess={responseGoogle}
 								onFailure={responseGoogle}
