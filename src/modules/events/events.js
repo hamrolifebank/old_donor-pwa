@@ -58,9 +58,18 @@ export default function Events() {
 
 	const handleRegisterToEvent = async eventId => {
 		const userToken = getUserToken();
+
 		if (userToken && userToken !== 'undefined' && userToken.length > 0) {
 			let currentUser = await DataService.get('user');
+			const decodedToken = jwtDecode(userToken);
+			if (!isTokenValid(decodedToken.exp)) {
+				Swal.fire('ERROR', 'Your token has expired, please log in again', 'error').then(result => {
+					setLoginModal(true);
+				});
 
+				return;
+				//throw { data: { message: 'Token has expired' } };
+			}
 			if (
 				!currentUser ||
 				!currentUser.name ||
@@ -136,12 +145,7 @@ export default function Events() {
 			const response = await emailLogin(payload);
 			if (response) {
 				toggleLoginFailAlert(false);
-				const decodedToken = jwtDecode(response.user.token);
-				if (isTokenValid(decodedToken.exp)) {
-					await DataService.save('user');
-				} else {
-					throw { data: { message: 'Token has expired' } };
-				}
+				await DataService.save('user');
 				document.getElementById('emailForm').reset();
 				setEmailModal(false);
 				//window.location.replace('/');
@@ -405,7 +409,7 @@ export default function Events() {
 									</button>
 								)}
 								appId={APPID.facebookId}
-								autoLoad={true}
+								autoLoad={false}
 								fields="name,email,picture"
 								callback={responseFacebook}
 							/>
