@@ -2,28 +2,27 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import { useToasts } from 'react-toast-notifications';
 import { Card, Row, Col, Button } from 'react-bootstrap';
+import { GoogleLogin } from 'react-google-login';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import jwtDecode from 'jwt-decode';
 import DataService from '../../services/db';
 import ModalWrapper from '../global/ModalWrapper';
-
+import CLIENTID from '../../constants/clientId';
 import { EventsContext } from '../../contexts/EventsContext';
 import { AppContext } from '../../contexts/AppContext';
-
-import authService from '../../services/auth';
+import { UserContext } from '../../contexts/UserContext';
 
 export default function Events() {
 	const [cookies, setCookie] = useCookies(['access_token', 'user', 'permissions']);
 	const { addToast } = useToasts();
 	const { listEvents, pagination, events, registerUserToEvent } = useContext(EventsContext);
+	const { emailLogin, googleLogin } = useContext(UserContext);
 	const { wallet } = useContext(AppContext);
 	const [user, setUser] = useState({});
 	const [userDetailModal, setUserDetailModal] = useState(false);
 	const [loginModal, setLoginModal] = useState(false);
 	const [emailModal, setEmailModal] = useState(false);
-	const [facebookModal, setFacebookModal] = useState(false);
-	const [gmailModal, setGmailModal] = useState(false);
 	const [loginPayload, setLoginPayload] = useState({});
 
 	const inputRef = useRef(null);
@@ -42,6 +41,7 @@ export default function Events() {
 	};
 
 	const setUserInfoFromCookies = async () => {
+		console.log('current cookies', cookies);
 		await setUser(prev => ({
 			...prev,
 			name: cookies.user.name.first ? `${cookies.user.name.first} ${cookies.user.name.last}` : ''
@@ -65,7 +65,6 @@ export default function Events() {
 				getAdditionalUserInfo()
 					.then()
 					.catch(e => {
-						console.log(e.data.message);
 						Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
 					});
 			}
@@ -82,7 +81,6 @@ export default function Events() {
 						Swal.fire('SUCCESS', 'Registration successful!', 'success');
 					})
 					.catch(e => {
-						console.log(e.data.message);
 						Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
 					});
 			}
@@ -101,8 +99,6 @@ export default function Events() {
 		if (option === 'email') {
 			setLoginModal(false);
 			setEmailModal(true);
-		} else if (option === 'gmail') {
-		} else if (option === 'facebook') {
 		}
 	};
 
@@ -126,12 +122,11 @@ export default function Events() {
 			payload.loginBy = 'email';
 		}
 		try {
-			const response = await authService.login(payload);
+			const response = await emailLogin(payload);
 			if (response) {
-				console.log(response);
+				console.log('email login response:', response);
 				toggleLoginFailAlert(false);
 				const decodedToken = jwtDecode(response.user.token);
-				console.log(new Date(decodedToken.exp * 1000));
 				if (isTokenValid(decodedToken.exp)) {
 					setCookie('access_token', response.user.token, {
 						path: '/'
@@ -149,6 +144,7 @@ export default function Events() {
 				}
 				document.getElementById('emailForm').reset();
 				setEmailModal(false);
+				window.location.replace('/');
 				addToast('You have logged in succesfully', {
 					appearance: 'success',
 					autoDismiss: true
@@ -160,7 +156,6 @@ export default function Events() {
 				appearance: 'error',
 				autoDismiss: true
 			});
-			console.log('error:', error.data);
 		}
 	};
 
@@ -170,6 +165,30 @@ export default function Events() {
 			setLoginPayload({});
 			setEmailModal(false);
 			setLoginModal(true);
+		}
+	};
+
+	const responseGoogle = async response => {
+		if (response.error === 'popup_closed_by_user') return;
+		const { profileObj } = response;
+		try {
+			let { email } = profileObj;
+			email = email.split('@')[1];
+			if (['rumsan.com', 'rumsan.net'].includes(email)) {
+				await googleLogin(profileObj);
+				window.location.replace('/');
+			} else throw new Error('User email must be from Rumsan Group of Companies');
+		} catch (e) {
+			let erroMsg = e.message;
+			erroMsg =
+				e && e.message !== 'Request failed with status code 500'
+					? e.message
+					: 'User Account Suspended. Contact Rumsan Admin.';
+			Swal.fire('ERROR', e.message, 'error');
+			addToast(erroMsg, {
+				appearance: 'error',
+				autoDismiss: true
+			});
 		}
 	};
 
@@ -363,13 +382,26 @@ export default function Events() {
 							</button>
 						</Col>
 						<Col xs={4} className="text-center">
-							<button
-								className="btn btn-circle btn-xl"
-								style={{ backgroundColor: '#DB4437' }}
-								onClick={() => handleSignIn('google')}
-							>
-								<i className="fa-brands fa-google" style={{ color: '#fff' }}></i>
-							</button>
+							<GoogleLogin
+								render={renderProps => (
+									<button
+										className="btn btn-circle btn-xl"
+										style={{ backgroundColor: '#DB4437' }}
+										onClick={renderProps.onClick}
+										disabled={renderProps.disabled}
+									>
+										<i className="fa-brands fa-google" style={{ color: '#fff' }}></i>
+									</button>
+								)}
+								className="btn"
+								clientId={CLIENTID.clientId}
+								buttonText="Login with Google"
+								onSuccess={responseGoogle}
+								onFailure={responseGoogle}
+								cookiePolicy={'single_host_origin'}
+								isSignedIn={false}
+								theme="dark"
+							/>
 						</Col>
 						<Col xs={4} className="text-center">
 							<button className="btn btn-success btn-circle btn-xl" onClick={() => handleSignIn('email')}>
