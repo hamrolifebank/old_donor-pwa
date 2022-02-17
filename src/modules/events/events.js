@@ -57,17 +57,32 @@ export default function Events() {
 
 	const handleRegisterToEvent = async eventId => {
 		const userToken = getUserToken();
-		console.log(user);
 		if (userToken && userToken.length > 0) {
-			if (!user || !user.name || !user.email || !user.phone || !user.gender || !user.bloodGroup) {
+			let currentUser = await DataService.get('user');
+
+			if (
+				!currentUser ||
+				!currentUser.name ||
+				!currentUser.email ||
+				!currentUser.phone ||
+				!currentUser.gender ||
+				!currentUser.bloodGroup
+			) {
 				getAdditionalUserInfo()
 					.then()
 					.catch(e => {
 						Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
 					});
 			}
-			if (user && user.name && user.email && user.phone && user.gender && user.bloodGroup) {
-				registerUserToEvent(eventId, user)
+			if (
+				currentUser &&
+				currentUser.name &&
+				currentUser.email &&
+				currentUser.phone &&
+				currentUser.gender &&
+				currentUser.bloodGroup
+			) {
+				registerUserToEvent(eventId, currentUser)
 					.then(d => {
 						Swal.fire('SUCCESS', 'Registration successful!', 'success');
 					})
@@ -82,7 +97,10 @@ export default function Events() {
 
 	const handleUserDetailsFormSubmit = async e => {
 		e.preventDefault();
-		await DataService.save('user', user);
+		let currentUser = await DataService.get('user');
+		currentUser = { ...currentUser, user };
+
+		await DataService.save('user', currentUser);
 		setUserDetailModal(false);
 	};
 
@@ -183,7 +201,10 @@ export default function Events() {
 			const setInitialUserData = async () => {
 				//await DataService.remove('user');
 				const userData = await DataService.get('user');
-				if (userData) setUser(userData);
+
+				if (userData) {
+					setUser(userData);
+				}
 			};
 			setInitialUserData();
 		}, // eslint-disable-next-line
@@ -248,7 +269,10 @@ export default function Events() {
 					title="Enter your Details"
 					showModal={userDetailModal}
 					onShow={() => inputRef.current.focus()}
-					onHide={() => setUserDetailModal(false)}
+					onHide={() => {
+						setUserDetailModal(false);
+						setUser({});
+					}}
 				>
 					<form id="userDetailsForm" onSubmit={handleUserDetailsFormSubmit}>
 						<div className="form-group">
