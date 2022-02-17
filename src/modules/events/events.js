@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { useCookies } from 'react-cookie';
 import { useToasts } from 'react-toast-notifications';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login';
@@ -12,9 +11,9 @@ import CLIENTID from '../../constants/clientId';
 import { EventsContext } from '../../contexts/EventsContext';
 import { AppContext } from '../../contexts/AppContext';
 import { UserContext } from '../../contexts/UserContext';
+import { getUser, saveUser, saveUserToken, saveUserRoles, getUserToken } from '../../utils/sessionmanager';
 
 export default function Events() {
-	const [cookies, setCookie] = useCookies(['access_token', 'user', 'permissions']);
 	const { addToast } = useToasts();
 	const { listEvents, pagination, events, registerUserToEvent } = useContext(EventsContext);
 	const { emailLogin, googleLogin } = useContext(UserContext);
@@ -41,7 +40,6 @@ export default function Events() {
 	};
 
 	const setUserInfoFromCookies = async () => {
-		console.log('current cookies', cookies);
 		await setUser(prev => ({
 			...prev,
 			name: cookies.user.name.first ? `${cookies.user.name.first} ${cookies.user.name.last}` : ''
@@ -55,11 +53,11 @@ export default function Events() {
 
 	const getAdditionalUserInfo = async () => {
 		setUserDetailModal(true);
-		setUserInfoFromCookies();
 	};
 
-	const handleRegister = async eventId => {
-		const userToken = cookies.access_token;
+	const handleRegisterToEvent = async eventId => {
+		const userToken = getUserToken();
+		console.log(user);
 		if (userToken && userToken.length > 0) {
 			if (!user || !user.name || !user.email || !user.phone || !user.gender || !user.bloodGroup) {
 				getAdditionalUserInfo()
@@ -68,13 +66,6 @@ export default function Events() {
 						Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
 					});
 			}
-			// const userData = {
-			// 	name: `${cookies.user.name.first} ${cookies.user.name.last}`,
-			// 	email: cookies.user.email,
-			// 	phone: cookies.user.phone,
-			// 	user_id: cookies.user.id || null,
-			// 	walletAddress: wallet.address
-			// };
 			if (user && user.name && user.email && user.phone && user.gender && user.bloodGroup) {
 				registerUserToEvent(eventId, user)
 					.then(d => {
@@ -124,27 +115,16 @@ export default function Events() {
 		try {
 			const response = await emailLogin(payload);
 			if (response) {
-				console.log('email login response:', response);
 				toggleLoginFailAlert(false);
 				const decodedToken = jwtDecode(response.user.token);
 				if (isTokenValid(decodedToken.exp)) {
-					setCookie('access_token', response.user.token, {
-						path: '/'
-					});
-					setCookie('user', JSON.stringify(response.user), {
-						path: '/'
-					});
-					setCookie('permissions', response.permissions, {
-						path: '/'
-					});
-					await setUserInfoFromCookies();
 					await DataService.save('user');
 				} else {
 					throw { data: { message: 'Token has expired' } };
 				}
 				document.getElementById('emailForm').reset();
 				setEmailModal(false);
-				window.location.replace('/');
+				//window.location.replace('/');
 				addToast('You have logged in succesfully', {
 					appearance: 'success',
 					autoDismiss: true
@@ -176,7 +156,12 @@ export default function Events() {
 			email = email.split('@')[1];
 			if (['rumsan.com', 'rumsan.net'].includes(email)) {
 				await googleLogin(profileObj);
-				window.location.replace('/');
+				setLoginModal(false);
+				addToast('You have logged in succesfully', {
+					appearance: 'success',
+					autoDismiss: true
+				});
+				//window.location.replace('/');
 			} else throw new Error('User email must be from Rumsan Group of Companies');
 		} catch (e) {
 			let erroMsg = e.message;
@@ -245,7 +230,7 @@ export default function Events() {
 												<b>Contact : </b>
 												{el.beneficiary.phone || ''}
 											</p>
-											<Button variant="primary" onClick={() => handleRegister(el._id)}>
+											<Button variant="primary" onClick={() => handleRegisterToEvent(el._id)}>
 												Register
 											</Button>
 										</Card.Body>
