@@ -12,7 +12,7 @@ import APPID from '../../constants/clientId';
 import { EventsContext } from '../../contexts/EventsContext';
 import { AppContext } from '../../contexts/AppContext';
 import { UserContext } from '../../contexts/UserContext';
-import { getUser, saveUser, saveUserToken, saveUserRoles, getUserToken } from '../../utils/sessionmanager';
+import { getUserToken } from '../../utils/sessionmanager';
 
 export default function Events() {
 	const { addToast } = useToasts();
@@ -38,18 +38,6 @@ export default function Events() {
 					autoDismiss: true
 				});
 			});
-	};
-
-	const setUserInfoFromCookies = async () => {
-		await setUser(prev => ({
-			...prev,
-			name: cookies.user.name.first ? `${cookies.user.name.first} ${cookies.user.name.last}` : ''
-		}));
-		await setUser(prev => ({ ...prev, email: cookies.user.email ? cookies.user.email : '' }));
-		await setUser(prev => ({ ...prev, phone: cookies.user.phone ? cookies.user.phone : '' }));
-		await setUser(prev => ({ ...prev, user_id: cookies.user.id ? cookies.user.id : '' }));
-		await setUser(prev => ({ ...prev, gender: cookies.user.gender ? cookies.user.gender : '' }));
-		await setUser(prev => ({ ...prev, access_token: cookies.access_token ? cookies.access_token : '' }));
 	};
 
 	const getAdditionalUserInfo = async () => {
@@ -298,7 +286,7 @@ export default function Events() {
 								className="form-control"
 								ref={inputRef}
 								required
-								value={user.name}
+								value={user.name || ''}
 								onChange={e => setUser(user => ({ ...user, name: e.target.value }))}
 							/>
 						</div>
@@ -309,7 +297,7 @@ export default function Events() {
 								type="text"
 								className="form-control"
 								required
-								value={user.phone}
+								value={user.phone || ''}
 								onChange={e => setUser(user => ({ ...user, phone: e.target.value }))}
 							/>
 						</div>
@@ -320,7 +308,7 @@ export default function Events() {
 								type="email"
 								className="form-control"
 								required
-								value={user.email}
+								value={user.email || ''}
 								onChange={e => setUser(user => ({ ...user, email: e.target.value }))}
 							/>
 						</div>
