@@ -1,7 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
+import Swal from 'sweetalert2';
 
 export default function Profile() {
+	const { logOut } = useContext(UserContext);
+
+	const handleLogOut = () => {
+		Swal.fire({
+			title: 'Are you sure you want to logout?',
+			showDenyButton: true,
+			confirmButtonText: 'Yes',
+			denyButtonText: `No`
+		}).then(result => {
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isConfirmed) {
+				Swal.fire('Logged out!', '', 'success');
+				logOut();
+			}
+		});
+	};
 	return (
 		<>
 			<div id="appCapsule">
@@ -63,6 +81,11 @@ export default function Profile() {
 										<footer>...</footer>
 									</div>
 								</Link>
+							</li>
+							<li onClick={handleLogOut} style={{ cursor: 'pointer' }}>
+								<div className="in item">
+									<div>Log Out</div>
+								</div>
 							</li>
 						</ul>
 					</div>

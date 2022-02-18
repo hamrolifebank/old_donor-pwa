@@ -49,6 +49,9 @@ export default function Events() {
 
 		if (userToken && userToken !== 'undefined' && userToken.length > 0) {
 			let currentUser = await DataService.get('user');
+			if (!currentUser.walletAddress) {
+				await DataService.save('user', { ...currentUser, wallet_address: wallet.address });
+			}
 			const decodedToken = jwtDecode(userToken);
 			if (!isTokenValid(decodedToken.exp)) {
 				Swal.fire('ERROR', 'Your token has expired, please log in again', 'error').then(result => {
@@ -96,9 +99,7 @@ export default function Events() {
 	const handleUserDetailsFormSubmit = async e => {
 		e.preventDefault();
 		let currentUser = await DataService.get('user');
-		console.log('currentUser in indexdb', currentUser);
 		currentUser = { ...currentUser, ...user };
-		console.log('userData saved to indexdb', currentUser);
 		await DataService.save('user', currentUser);
 		setUserDetailModal(false);
 	};
@@ -133,7 +134,6 @@ export default function Events() {
 			const response = await emailLogin(payload);
 			if (response) {
 				toggleLoginFailAlert(false);
-				await DataService.save('user');
 				document.getElementById('emailForm').reset();
 				setEmailModal(false);
 				//window.location.replace('/');
@@ -357,7 +357,7 @@ export default function Events() {
 						</button>
 					</form>
 				</ModalWrapper>
-				<ModalWrapper showModal={loginModal} onShow={() => {}} onHide={() => setLoginModal(false)}>
+				<ModalWrapper showModal={loginModal} onHide={() => setLoginModal(false)}>
 					<div className="row d-flex justify-content-center align-items-center">
 						<div className="col-md-12 text-center">
 							<img src="/assets/img/icon/hlb-512.png" width="240" alt="Hamro LifeBank" />

@@ -34,7 +34,6 @@ export function getUserPermissions() {
 
 export function logoutUser() {
 	localStorage.clear();
-	window.location = '/authentication/login';
 }
 
 export function getUserToken() {

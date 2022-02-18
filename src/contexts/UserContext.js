@@ -1,22 +1,29 @@
 import React, { createContext } from 'react';
 import UserService from '../services/user';
+import DataService from '../services/db';
+import { logoutUser } from '../utils/sessionmanager';
 
 export const UserContext = createContext();
 export const UserContextProvider = ({ children }) => {
 	const emailLogin = payload => {
-		return AuthService.login(payload);
+		return UserService.login(payload);
 	};
 
 	const googleLogin = payload => {
-		return AuthService.loginGoogle(payload);
+		return UserService.loginGoogle(payload);
 	};
 
 	const facebookLogin = payload => {
-		return AuthService.loginFacebook(payload);
+		return UserService.loginFacebook(payload);
 	};
 
 	const getUserInfo = () => {
 		return UserService.userInfo();
+	};
+
+	const logOut = async () => {
+		DataService.remove('user');
+		logoutUser();
 	};
 
 	return (
@@ -25,7 +32,8 @@ export const UserContextProvider = ({ children }) => {
 				emailLogin,
 				googleLogin,
 				facebookLogin,
-				getUserInfo
+				getUserInfo,
+				logOut
 			}}
 		>
 			{children}
