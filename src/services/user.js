@@ -1,9 +1,11 @@
 import API from '../constants/api';
 import axios from 'axios';
-import { saveUser, saveUserToken, saveUserRoles } from '../utils/sessionmanager';
-import DataService from '../services/db';
+import { saveUser, saveUserToken, saveUserRoles, getUserToken } from '../utils/sessionmanager';
+import DataService from './db';
 
-const Auth = {
+const userToken = getUserToken();
+
+const User = {
 	login(payload) {
 		return new Promise((resolve, reject) => {
 			axios
@@ -47,7 +49,22 @@ const Auth = {
 				})
 				.catch(e => reject(e.response));
 		});
+	},
+
+	userInfo() {
+		return new Promise((resolve, reject) => {
+			axios
+				.get(`${API.BASE_URL}/users/me`, {
+					headers: {
+						access_token: userToken
+					}
+				})
+				.then(res => {
+					resolve(res.data);
+				})
+				.catch(e => reject(e.response));
+		});
 	}
 };
 
-export default Auth;
+export default User;

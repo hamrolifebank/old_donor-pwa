@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import AuthService from '../services/auth';
+import UserService from '../services/user';
 
 export const UserContext = createContext();
 export const UserContextProvider = ({ children }) => {
@@ -15,12 +15,17 @@ export const UserContextProvider = ({ children }) => {
 		return AuthService.loginFacebook(payload);
 	};
 
+	const getUserInfo = () => {
+		return UserService.userInfo();
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
 				emailLogin,
 				googleLogin,
-				facebookLogin
+				facebookLogin,
+				getUserInfo
 			}}
 		>
 			{children}
