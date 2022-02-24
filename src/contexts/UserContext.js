@@ -22,8 +22,16 @@ export const UserContextProvider = ({ children }) => {
 	};
 
 	const logOut = async () => {
-		DataService.remove('user');
+		await DataService.remove('user');
 		logoutUser();
+	};
+
+	const generateOTP = payload => {
+		return UserService.generateOTP(payload);
+	};
+
+	const verifyOTP = payload => {
+		return UserService.verifyOTP(payload);
 	};
 
 	return (
@@ -33,7 +41,9 @@ export const UserContextProvider = ({ children }) => {
 				googleLogin,
 				facebookLogin,
 				getUserInfo,
-				logOut
+				logOut,
+				generateOTP,
+				verifyOTP
 			}}
 		>
 			{children}
