@@ -3,11 +3,13 @@ import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import { AppContext } from '../../contexts/AppContext';
+import { UserContext } from '../../contexts/UserContext';
 import DataService from '../../services/db';
 
 export default function Create() {
 	let history = useHistory();
 	const { wallet } = useContext(AppContext);
+	const { googleLogin } = useContext(UserContext);
 
 	const handleCancelClick = e => {
 		e.preventDefault();
@@ -38,6 +40,11 @@ export default function Create() {
 		DataService.remove('temp_encryptedWallet');
 		DataService.remove('temp_passcode');
 		DataService.saveAddress(wallet.address);
+		const profile = await DataService.get('profile');
+		const res = await googleLogin(profile);
+		console.log('res:', res);
+		console.log('wallet address', wallet.address);
+		await DataService.save('profile', { ...profile, user_id: res.user.id, wallet_address: wallet.address });
 		return confirmBackup();
 	};
 
