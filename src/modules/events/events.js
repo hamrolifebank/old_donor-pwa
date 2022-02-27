@@ -177,6 +177,12 @@ export default function Events() {
 													</ul>
 													<div class="widget-49-meeting-action">
 														<Link
+															onClick={() => handleRegisterToEvent(el._id)}
+															className="btn btn-sm btn-flash-border-primary"
+														>
+															Register
+														</Link>
+														<Link
 															to={`/events/${el._id}`}
 															className="btn btn-sm btn-flash-border-primary"
 														>
