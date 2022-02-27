@@ -157,8 +157,8 @@ export default function Events() {
 														<li class="widget-49-meeting-item">
 															<span>
 																<b>
-																	<i className="fa-solid fa-location-dot"></i>
-																</b>{' '}
+																	<i className="fa-solid fa-location-dot mr-2"></i>
+																</b>
 																{el.location
 																	? el.location
 																	: el.beneficiary.address
