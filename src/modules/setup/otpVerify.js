@@ -20,8 +20,7 @@ export default function OTPVerify() {
 	const [loadingModal, setLoadingModal] = useState(false);
 
 	const location = useLocation();
-	const otpDetails = location.state.otpDetails;
-	console.log('otpDetails:', otpDetails);
+	const { otpDetails, email } = location.state;
 
 	const handleChange = otp => setOtp(otp);
 	const handleClear = () => setOtp('');
@@ -76,6 +75,7 @@ export default function OTPVerify() {
 							<div className="">
 								<div style={{ paddingLeft: 20, paddingRight: 20 }}>
 									<h2 className="value text-center">Enter the verification code </h2>
+									<h4>A verification code has been sent to your email&nbsp;({email}).</h4>
 								</div>
 								<div
 									className="card-body d-flex flex-column justify-content-center align-items-center"
