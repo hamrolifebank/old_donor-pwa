@@ -9,7 +9,6 @@ import DataService from '../../services/db';
 import Wallet from '../../utils/blockchain/wallet';
 import { UserContext } from '../../contexts/UserContext';
 import { AppContext } from '../../contexts/AppContext';
-import OTP from '../../constants/otp';
 
 export default function OTPVerify() {
 	let history = useHistory();
@@ -84,7 +83,7 @@ export default function OTPVerify() {
 									<OtpInput
 										value={otp}
 										onChange={handleChange}
-										numInputs={OTP.LENGTH}
+										numInputs={6}
 										separator={<span>-</span>}
 										containerStyle={'form-group d-flex justify-content-center w-50'}
 										inputStyle={'form-control p-0 w-100'}
@@ -98,7 +97,7 @@ export default function OTPVerify() {
 										</div>
 										<div className="col-xs-6 ml-2">
 											{' '}
-											{otp.length === OTP.LENGTH ? (
+											{otp.length === 6 ? (
 												<button className="btn btn-primary" onClick={handleVerify}>
 													Verify
 												</button>
