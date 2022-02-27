@@ -5,7 +5,6 @@ import { Form, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
 import Loading from '../global/Loading';
-import OTP from '../../constants/otp';
 import DataService from '../../services/db';
 import { UserContext } from '../../contexts/UserContext';
 
@@ -23,7 +22,7 @@ export default function Main() {
 		const pro = await DataService.get('profile');
 		console.log('db profile:', pro);
 		setLoadingModal(true);
-		generateOTP({ email: profile.email, otpLength: OTP.LENGTH, otpValidTime: OTP.VALID_TIME })
+		generateOTP({ email: profile.email })
 			.then(d => {
 				setLoadingModal(false);
 				console.log('response from generate otp:', d);
