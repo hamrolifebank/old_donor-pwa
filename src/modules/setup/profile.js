@@ -2,17 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IoCloseCircle } from 'react-icons/io5';
 import { Form, Button } from 'react-bootstrap';
-import { useToasts } from 'react-toast-notifications';
+import Swal from 'sweetalert2';
 
+import Loading from '../global/Loading';
 import OTP from '../../constants/otp';
 import DataService from '../../services/db';
 import { UserContext } from '../../contexts/UserContext';
 
 export default function Main() {
-	const { addToast } = useToasts();
 	const history = useHistory();
 	const { generateOTP } = useContext(UserContext);
-	const [isLoading, setIsLoading] = useState(false);
+	const [loadingMessage] = useState('Please wait, sending OTP verification code to your email');
+	const [loadingModal, setLoadingModal] = useState(false);
 	const [profile, setProfile] = useState({ name: '', phone: '', address: '', email: '', gender: '', bloodGroup: '' });
 
 	const save = async event => {
@@ -21,39 +22,41 @@ export default function Main() {
 		await DataService.save('profile', profile);
 		const pro = await DataService.get('profile');
 		console.log('db profile:', pro);
-		setIsLoading(true);
+		setLoadingModal(true);
 		generateOTP({ email: profile.email, otpLength: OTP.LENGTH, otpValidTime: OTP.VALID_TIME })
 			.then(d => {
-				setIsLoading(false);
+				setLoadingModal(false);
 				console.log('response from generate otp:', d);
-				history.push({ pathname: '/otp-verify', state: { otpDetails: d } });
+				history.push({ pathname: '/otp-verify', state: { otpDetails: d, email: profile.email } });
 			})
 			.catch(e => {
-				addToast('Something went wrong!', {
-					appearance: 'error',
-					autoDismiss: true
-				});
+				setLoadingModal(false);
+				Swal.fire('ERROR', 'Something Went Wrong!', 'error');
 			});
 	};
 
 	const updateProfile = e => {
 		let formData = new FormData(e.target.form);
 		let data = {};
+		data.googleId = profile.googleId || '';
+		data.imageUrl = profile.imageUrl || '';
 		formData.forEach((value, key) => (data[key] = value));
 		data.phone = data.phone.replace(/[^0-9]/g, '');
+		console.log(data);
 		setProfile(data);
 	};
 
 	useEffect(() => {
 		(async () => {
 			let profile = await DataService.get('profile');
-			console.log(profile);
+			console.log('initial data in db-profile:', profile);
 			if (profile) setProfile(profile);
 		})();
 	}, []);
 
 	return (
 		<>
+			<Loading message={loadingMessage} showModal={loadingModal} />
 			<div id="appCapsule">
 				<div className="d-flex justify-content-center align-items-center">
 					<div className="col-md-12 text-center">
@@ -84,7 +87,7 @@ export default function Main() {
 
 								<div className="form-group basic">
 									<div className="input-wrapper">
-										<label className="label">Phone #</label>
+										<label className="label">Phone</label>
 										<Form.Control
 											type="number"
 											className="form-control"
@@ -183,13 +186,6 @@ export default function Main() {
 						<div className="p-2">
 							<Button type="submit" className="btn btn-lg btn-block btn-success mt-3">
 								Continue
-								<div
-									className="spinner-border ml-2"
-									role="status"
-									style={{ display: isLoading ? 'block' : 'none' }}
-								>
-									<span className="sr-only">Loading...</span>
-								</div>
 							</Button>
 						</div>
 					</Form>
