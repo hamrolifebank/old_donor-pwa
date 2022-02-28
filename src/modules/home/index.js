@@ -14,6 +14,7 @@ import Settings from '../settings/misc';
 import Transfer from '../transfer';
 import GoogleBackup from '../misc/googleBackup';
 import Events from '../events';
+import EventDetail from '../events/details';
 import DonationHistory from '../donationHistory';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
 			<Switch>
 				<Route exact path="/" component={Main} />
 				<PrivateRoute exact path="/events" component={Events} wallet={wallet} />
+				<PrivateRoute exact path="/events/:id" component={EventDetail} wallet={wallet} />
 				<PrivateRoute exact path="/donation-history" component={DonationHistory} wallet={wallet} />
 				<PrivateRoute exact path="/backup" component={BackupWallet} wallet={wallet} />
 				<PrivateRoute exact path="/networks" component={NetworkSettings} wallet={wallet} />
