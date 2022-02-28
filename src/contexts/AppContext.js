@@ -3,6 +3,7 @@ import appReduce from '../reducers/appReducer';
 import APP_ACTIONS from '../actions/appActions';
 import DataService from '../services/db';
 import { APP_CONSTANTS, DEFAULT_TOKEN } from '../constants';
+import { useHistory } from 'react-router-dom';
 
 const initialState = {
 	sendingTokenName: '',
@@ -17,6 +18,7 @@ const initialState = {
 export const AppContext = createContext(initialState);
 export const AppContextProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(appReduce, initialState);
+	const history = useHistory();
 
 	const initApp = useCallback(async () => {
 		DataService.addDefaultAsset(DEFAULT_TOKEN.SYMBOL, DEFAULT_TOKEN.NAME);
@@ -48,6 +50,54 @@ export const AppContextProvider = ({ children }) => {
 		dispatch({ type: APP_ACTIONS.SET_SENDING_TOKEN_NAME, data: symbol });
 	}
 
+	async function signAuthSignature(wallet) {
+		let timeStamp = Date.now();
+		let signed = await wallet.signMessage(timeStamp.toString());
+		const signature = timeStamp + '.' + signed;
+		return signature;
+	}
+
+	async function signDataSignature(wallet, data = {}) {
+		const mdHash = hash.MD5(data);
+		let signed = await wallet.signMessage(mdHash);
+		const signature = mdHash + '.' + signed;
+		return signature;
+	}
+
+	async function signAndCallService(passedFunc, passedParams) {
+		let wallet = state.wallet;
+
+		let hasWallet = state.hasWallet;
+		let payload;
+		try {
+			if (hasWallet && !wallet) {
+				wallet = await unlockWallet();
+			} else if (!hasWallet) {
+				history.push('/setup');
+				return;
+			}
+			let auth_signature = await signAuthSignature(wallet);
+			let data_signature;
+
+			if (passedParams) {
+				data_signature = await signDataSignature(wallet, passedParams);
+				payload = {
+					...passedParams,
+					auth_signature,
+					data_signature
+				};
+			} else {
+				payload = {
+					...passedParams,
+					auth_signature
+				};
+			}
+			return passedFunc(payload);
+		} catch (err) {
+			throw err;
+		}
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -64,7 +114,8 @@ export const AppContextProvider = ({ children }) => {
 				setHasWallet,
 				setNetwork,
 				setWallet,
-				dispatch
+				dispatch,
+				signAndCallService
 			}}
 		>
 			{children}
