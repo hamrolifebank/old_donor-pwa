@@ -123,38 +123,38 @@ export default function Events() {
 	return (
 		<>
 			<div id="appCapsule">
-				<div class="container mt-4">
-					<div class="row">
+				<div className="container mt-4">
+					<div className="row">
 						{events && events.length > 0 ? (
 							events.map((el, i) => {
 								return (
-									<div class="col-lg-4" key={i}>
-										<div class="card card-margin">
-											<div class="card-header no-border">
-												<h5 class="card-title">{moment(el.date).format('dddd')}</h5>
+									<div className="col-lg-4" key={i}>
+										<div className="card card-margin">
+											<div className="card-header no-border">
+												<h5 className="card-title">{moment(el.date).format('dddd')}</h5>
 											</div>
-											<div class="card-body pt-0">
-												<div class="widget-49">
-													<div class="widget-49-title-wrapper">
-														<div class="widget-49-date-primary">
-															<span class="widget-49-date-day">
+											<div className="card-body pt-0">
+												<div className="widget-49">
+													<div className="widget-49-title-wrapper">
+														<div className="widget-49-date-primary">
+															<span className="widget-49-date-day">
 																{moment(el.date).format('D')}
 															</span>
-															<span class="widget-49-date-month">
+															<span className="widget-49-date-month">
 																{moment(el.date).format('MMM')}
 															</span>
 														</div>
-														<div class="widget-49-meeting-info">
-															<span class="widget-49-pro-title">
+														<div className="widget-49-meeting-info">
+															<span className="widget-49-pro-title">
 																{el.name ? el.name : ''}
 															</span>
-															<span class="widget-49-meeting-time">
+															<span className="widget-49-meeting-time">
 																{moment(el.date).format('hh:mm a')}
 															</span>
 														</div>
 													</div>
-													<ul class="widget-49-meeting-points">
-														<li class="widget-49-meeting-item">
+													<ul className="widget-49-meeting-points">
+														<li className="widget-49-meeting-item">
 															<span>
 																<b>
 																	<i className="fa-solid fa-location-dot mr-2"></i>
@@ -166,17 +166,18 @@ export default function Events() {
 																	: ''}
 															</span>
 														</li>
-														<li class="widget-49-meeting-item">
+														<li className="widget-49-meeting-item">
 															<span>
 																<b>
-																	<i class="fa-solid fa-house-chimney-medical"></i>
+																	<i className="fa-solid fa-house-chimney-medical"></i>
 																</b>{' '}
 																{el.beneficiary.name ? el.beneficiary.name : ''}
 															</span>
 														</li>
 													</ul>
-													<div class="widget-49-meeting-action">
+													<div className="widget-49-meeting-action">
 														<Link
+															to=""
 															onClick={() => handleRegisterToEvent(el._id)}
 															className="btn btn-sm btn-flash-border-primary"
 														>
