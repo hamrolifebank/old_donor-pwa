@@ -19,7 +19,6 @@ export function get(query) {
 
 export function registerUserToEvent(data) {
 	const { auth_signature, data_signature, eventId, user } = data;
-	user.walletAuth = true;
 	const config = getAuthHeaders(auth_signature, data_signature);
 	return new Promise((resolve, reject) => {
 		axios
