@@ -4,6 +4,7 @@ import APP_ACTIONS from '../actions/appActions';
 import DataService from '../services/db';
 import { APP_CONSTANTS, DEFAULT_TOKEN } from '../constants';
 import { useHistory } from 'react-router-dom';
+import hash from 'object-hash';
 
 const initialState = {
 	sendingTokenName: '',
