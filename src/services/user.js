@@ -30,7 +30,6 @@ const User = {
 					saveUser(res.data.user);
 					saveUserToken(res.data.access_token);
 					saveUserRoles(res.data.user.roles);
-					await DataService.save('user', { userId: res.data.user.id });
 					resolve(res.data);
 				})
 				.catch(e => reject(e.response));
