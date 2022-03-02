@@ -24,10 +24,11 @@ const User = {
 	loginGoogle(payload) {
 		return new Promise((resolve, reject) => {
 			axios
-				.post(`${API.BASE_URL}/users/auth/googleLogin`, payload)
+				.post(`${API.NEW_BASE_URL}/auth/google-login`, payload)
 				.then(async res => {
+					console.log('google login response', res);
 					saveUser(res.data.user);
-					saveUserToken(res.data.token);
+					saveUserToken(res.data.access_token);
 					saveUserRoles(res.data.user.roles);
 					await DataService.save('user', { user_id: res.data.user.id });
 					resolve(res.data);
