@@ -19,7 +19,7 @@ export default function Setup() {
 			let emailSuffix = email.split('@')[1];
 			if (['rumsan.com', 'rumsan.net'].includes(emailSuffix)) {
 				console.log('profileObj:', profileObj);
-				await DataService.save('profile', { name, email, googleId, imageUrl });
+				await DataService.save('profile', { name, email, serviceId: googleId, imageUrl });
 				history.push('/setup/profile');
 			} else throw new Error('User email must be from Rumsan Group of Companies');
 		} catch (e) {

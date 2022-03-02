@@ -37,7 +37,7 @@ export default function Main() {
 	const updateProfile = e => {
 		let formData = new FormData(e.target.form);
 		let data = {};
-		data.googleId = profile.googleId || '';
+		data.serviceId = profile.serviceId || '';
 		data.imageUrl = profile.imageUrl || '';
 		formData.forEach((value, key) => (data[key] = value));
 		data.phone = data.phone.replace(/[^0-9]/g, '');
