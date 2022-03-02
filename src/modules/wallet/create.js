@@ -35,17 +35,21 @@ export default function Create() {
 	};
 
 	const handleSaveClick = async () => {
-		let encryptedWallet = await DataService.get('temp_encryptedWallet');
-		await DataService.saveWallet(encryptedWallet);
-		DataService.remove('temp_encryptedWallet');
-		DataService.remove('temp_passcode');
-		DataService.saveAddress(wallet.address);
-		const profile = await DataService.get('profile');
-		const res = await googleLogin(profile);
-		console.log('res:', res);
-		console.log('wallet address', wallet.address);
-		await DataService.save('profile', { ...profile, user_id: res.user.id, wallet_address: wallet.address });
-		return confirmBackup();
+		try {
+			let encryptedWallet = await DataService.get('temp_encryptedWallet');
+			await DataService.saveWallet(encryptedWallet);
+			DataService.remove('temp_encryptedWallet');
+			DataService.remove('temp_passcode');
+			DataService.saveAddress(wallet.address);
+			const profile = await DataService.get('profile');
+			const res = await googleLogin({ ...profile, walletAddress: wallet.address });
+			console.log('res:', res);
+			console.log('wallet address', wallet.address);
+			await DataService.save('profile', { ...profile, userId: res.user.id, walletAddress: wallet.address });
+			return confirmBackup();
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (

@@ -14,7 +14,7 @@ const User = {
 					saveUser(res.data.user);
 					saveUserToken(res.data.user.token);
 					saveUserRoles(res.data.user.roles);
-					await DataService.save('user', { user_id: res.data.user.id });
+					await DataService.save('user', { userId: res.data.user.id });
 					resolve(res.data);
 				})
 				.catch(e => reject(e.response));
@@ -30,7 +30,7 @@ const User = {
 					saveUser(res.data.user);
 					saveUserToken(res.data.access_token);
 					saveUserRoles(res.data.user.roles);
-					await DataService.save('user', { user_id: res.data.user.id });
+					await DataService.save('user', { userId: res.data.user.id });
 					resolve(res.data);
 				})
 				.catch(e => reject(e.response));
@@ -45,7 +45,7 @@ const User = {
 					saveUser(res.data.user);
 					saveUserToken(res.data.token);
 					saveUserRoles(res.data.user.roles);
-					await DataService.save('user', { user_id: res.data.user.id });
+					await DataService.save('user', { userId: res.data.user.id });
 					resolve(res.data);
 				})
 				.catch(e => reject(e.response));
