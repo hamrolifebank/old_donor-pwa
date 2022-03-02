@@ -9,7 +9,7 @@ axios.defaults.headers.common['access_token'] = getUserToken();
 export function get(query) {
 	return new Promise((resolve, reject) => {
 		axios
-			.get(`${API.EVENTS}?${qs.stringify(query)}`)
+			.get(`${API.NEW_BASE_URL}/events?${qs.stringify(query)}`)
 			.then(res => resolve(res.data))
 			.catch(e => {
 				reject(e.response);
