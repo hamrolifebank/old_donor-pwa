@@ -25,9 +25,9 @@ export const EventsContextProvider = ({ children }) => {
 		});
 	};
 
-	const registerUserToEvent = (eventId, payload) => {
+	const registerUserToEvent = payload => {
 		return new Promise((resolve, reject) => {
-			Service.registerUserToEvent(eventId, payload)
+			Service.registerUserToEvent(payload)
 				.then(res => resolve(res))
 				.catch(e => reject(e));
 		});
