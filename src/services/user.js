@@ -54,7 +54,7 @@ const User = {
 	userInfo() {
 		return new Promise((resolve, reject) => {
 			axios
-				.get(`${API.BASE_URL}/users/me`, {
+				.get(`${API.NEW_BASE_URL}/users/me`, {
 					headers: {
 						access_token: userToken
 					}

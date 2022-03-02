@@ -1,9 +1,10 @@
 import API from '../constants/api';
 import axios from 'axios';
 import qs from 'query-string';
+import { getAuthHeaders } from '../utils';
+import { getUserToken } from '../utils/sessionmanager';
 
-// axios.defaults.headers.common['access_token'] =
-// 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiMGNjZmMyYzRkOGFmMTI2ZjZjOGZlZTc4ZThjYjg5Zjk6YTVjOTYxZDRiNDFlOGQzOTUxZDk5YWU2MzQ3NzdiZGVmNzE3M2UzNTlkYjgwNjQwZGFjZTRjZDBmODZlZjg1ZjE4ZGUxODM3NGRjNWJkYzA1YTViMDA1NWY2NGRhYzc3N2VkNTY3NTdhZDIzMzIxZTRhMDA5N2QyMTI1MDkxMDExMGQ5MzQ1ZWRkOTYzYTQ0ODk3ZTE3NWY0YjQyOTFkYTRjYjU0NGIxYzBlMDUwNjE0NzBlYTYxM2ZlNDlkMjc0NDE2N2IyZDk1NzUyMTRlMDhlZjk0NThjYmUzMjY5NzciLCJpYXQiOjE2MzQ3OTkzNTUsImV4cCI6MjQzNDc5OTM1NX0.lpTTbmWf3SJq26fTh9NMIvJULi57oyec_d9sVAIpwRk';
+axios.defaults.headers.common['access_token'] = getUserToken();
 
 export function get(query) {
 	return new Promise((resolve, reject) => {
@@ -16,10 +17,13 @@ export function get(query) {
 	});
 }
 
-export function registerUserToEvent(eventId, payload) {
+export function registerUserToEvent(data) {
+	const { auth_signature, data_signature, eventId, user } = data;
+	user.walletAuth = true;
+	const config = getAuthHeaders(auth_signature, data_signature);
 	return new Promise((resolve, reject) => {
 		axios
-			.post(`${API.EVENTS}/${eventId}/register`, payload)
+			.post(`${API.NEW_BASE_URL}/events/${eventId}/register`, user, config)
 			.then(res => resolve(res))
 			.catch(e => {
 				reject(e.response);
