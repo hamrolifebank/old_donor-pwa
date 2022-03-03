@@ -13,6 +13,8 @@ export default function Main() {
 	const { generateOTP } = useContext(UserContext);
 	const [loadingMessage] = useState('Please wait, sending OTP verification code to your email');
 	const [loadingModal, setLoadingModal] = useState(false);
+	const [agree, setAgree] = useState(true);
+	const [agreeDonor, setAgreeDonor] = useState(false);
 	const [profile, setProfile] = useState({ name: '', phone: '', address: '', email: '', gender: '', bloodGroup: '' });
 
 	const save = async event => {
@@ -41,8 +43,17 @@ export default function Main() {
 		data.imageUrl = profile.imageUrl || '';
 		formData.forEach((value, key) => (data[key] = value));
 		data.phone = data.phone.replace(/[^0-9]/g, '');
+		data.isDonor = agreeDonor;
 		console.log(data);
 		setProfile(data);
+	};
+
+	const handleAgreeDonor = e => {
+		setAgreeDonor(e.target.checked);
+	};
+
+	const handleAgreeTerms = e => {
+		setAgree(!e.target.checked);
 	};
 
 	useEffect(() => {
@@ -179,11 +190,19 @@ export default function Main() {
 										<option value="AB-">AB-</option>
 									</select>
 								</div>
+								<div className="form-group basic">
+									<input type="checkbox" className="mr-2" onChange={handleAgreeDonor} />
+									<label htmlFor="is_donor">Agree to become a donor</label>
+								</div>
+								<div className="form-group basic">
+									<input type="checkbox" className="mr-2" onChange={handleAgreeTerms} />
+									<label>I have read all the terms and conditions</label>
+								</div>
 							</div>
 						</div>
 
 						<div className="p-2">
-							<Button type="submit" className="btn btn-lg btn-block btn-success mt-3">
+							<Button disabled={agree} type="submit" className="btn btn-lg btn-block btn-success mt-3">
 								Continue
 							</Button>
 						</div>
