@@ -197,6 +197,15 @@ export default function Main() {
 										>
 											terms and conditions
 										</Link>
+										{' and '}
+										<Link
+											onClick={() => {
+												window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
+											}}
+											target="_blank"
+										>
+											privacy policies
+										</Link>
 									</label>
 								</div>
 							</div>
