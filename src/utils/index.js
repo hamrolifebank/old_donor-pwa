@@ -42,3 +42,13 @@ export const blobToBase64 = blob => {
 		};
 	});
 };
+
+export const getAuthHeaders = (auth_signature, data_signature = null) => {
+	const config = {
+		headers: {
+			auth_signature,
+			data_signature
+		}
+	};
+	return config;
+};
