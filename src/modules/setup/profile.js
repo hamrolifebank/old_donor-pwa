@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+
+import { useHistory, Link } from 'react-router-dom';
 import { IoCloseCircle } from 'react-icons/io5';
 import { Form, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
@@ -16,6 +17,7 @@ export default function Main() {
 	const [agree, setAgree] = useState(true);
 	const [agreeDonor, setAgreeDonor] = useState(false);
 	const [profile, setProfile] = useState({ name: '', phone: '', address: '', email: '', gender: '', bloodGroup: '' });
+	const termsAndConditionsUrl = 'https://hamrolifebank.com/privacy-policy';
 
 	const save = async event => {
 		event.preventDefault();
@@ -48,11 +50,8 @@ export default function Main() {
 		setProfile(data);
 	};
 
-	const handleAgreeDonor = e => {
-		setAgreeDonor(e.target.checked);
-	};
-
 	const handleAgreeTerms = e => {
+		setAgreeDonor(e.target.checked);
 		setAgree(!e.target.checked);
 	};
 
@@ -160,9 +159,7 @@ export default function Main() {
 											onChange={updateProfile}
 											value={profile.gender ? profile.gender : ''}
 										>
-											<option disabled value="">
-												Select gender
-											</option>
+											<option value="">Select gender</option>
 											<option value="M">Male</option>
 											<option value="F">Female</option>
 											<option value="O">Others</option>
@@ -177,9 +174,7 @@ export default function Main() {
 										onChange={updateProfile}
 										value={profile.bloodGroup ? profile.bloodGroup : ''}
 									>
-										<option disabled value="">
-											Select a blood group
-										</option>
+										<option value="">Select a blood group</option>
 										<option value="A+">A+</option>
 										<option value="B+">B+</option>
 										<option value="O+">O+</option>
@@ -191,12 +186,18 @@ export default function Main() {
 									</select>
 								</div>
 								<div className="form-group basic">
-									<input type="checkbox" className="mr-2" onChange={handleAgreeDonor} />
-									<label htmlFor="is_donor">Agree to become a donor</label>
-								</div>
-								<div className="form-group basic">
 									<input type="checkbox" className="mr-2" onChange={handleAgreeTerms} />
-									<label>I have read all the terms and conditions</label>
+									<label>
+										I agree to become a donor and I have read all the{' '}
+										<Link
+											onClick={() => {
+												window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
+											}}
+											target="_blank"
+										>
+											terms and conditions
+										</Link>
+									</label>
 								</div>
 							</div>
 						</div>
