@@ -8,13 +8,12 @@ import jwtDecode from 'jwt-decode';
 import DataService from '../../services/db';
 import { EventsContext } from '../../contexts/EventsContext';
 import { AppContext } from '../../contexts/AppContext';
-import { UserContext } from '../../contexts/UserContext';
 import { getUserToken } from '../../utils/sessionmanager';
 
 export default function Events() {
 	const { addToast } = useToasts();
 	const { listEvents, pagination, events, registerUserToEvent } = useContext(EventsContext);
-	const { wallet } = useContext(AppContext);
+	const { signAndCallService } = useContext(AppContext);
 	const [user, setUser] = useState({});
 
 	const fetchList = query => {
@@ -45,63 +44,24 @@ export default function Events() {
 				return;
 			} else {
 				if (user && user.name && user.email && user.phone && user.gender && user.bloodGroup) {
-					registerUserToEvent(eventId, user)
+					signAndCallService(registerUserToEvent, { eventId, user })
 						.then(d => {
 							Swal.fire('SUCCESS', 'Registration successful!', 'success');
+							console.log(d);
 						})
 						.catch(e => {
-							Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
+							console.log(e.data.message);
+							console.log(e.data.message === 'Event has expired');
+							if (e.data.message === 'Event has expired') Swal.fire('ERROR', e.data.message, 'error');
+							else if (e.data.message === 'Event does not exist')
+								Swal.fire('ERROR', e.data.message, 'error');
+							else if (e.data.message === 'User has already registered to the event')
+								Swal.fire('ERROR', e.data.message, 'error');
+							else Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
 						});
 				}
 			}
 		}
-		// if (userToken && userToken !== 'undefined' && userToken.length > 0) {
-		// 	let currentUser = await DataService.get('user');
-		// 	if (!currentUser.walletAddress) {
-		// 		await DataService.save('usepror', { ...currentUser, wallet_address: wallet.address });
-		// 	}
-		// 	const decodedToken = jwtDecode(userToken);
-		// 	if (!isTokenValid(decodedToken.exp)) {
-		// 		Swal.fire('ERROR', 'Your token has expired, please log in again', 'error').then(result => {
-		// 			setLoginModal(true);
-		// 		});
-
-		// 		return;
-		// 		//throw { data: { message: 'Token has expired' } };
-		// 	}
-		// 	if (
-		// 		!currentUser ||
-		// 		!currentUser.name ||
-		// 		!currentUser.email ||
-		// 		!currentUser.phone ||
-		// 		!currentUser.gender ||
-		// 		!currentUser.bloodGroup
-		// 	) {
-		// 		getAdditionalUserInfo()
-		// 			.then()
-		// 			.catch(e => {
-		// 				Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
-		// 			});
-		// 	}
-		// 	if (
-		// 		currentUser &&
-		// 		currentUser.name &&
-		// 		currentUser.email &&
-		// 		currentUser.phone &&
-		// 		currentUser.gender &&
-		// 		currentUser.bloodGroup
-		// 	) {
-		// 		registerUserToEvent(eventId, currentUser)
-		// 			.then(d => {
-		// 				Swal.fire('SUCCESS', 'Registration successful!', 'success');
-		// 			})
-		// 			.catch(e => {
-		// 				Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
-		// 			});
-		// 	}
-		// } else {
-		// 	setLoginModal(true);
-		// }
 	};
 
 	useEffect(
@@ -109,7 +69,6 @@ export default function Events() {
 			fetchList();
 			console.log(events);
 			const setInitialUserData = async () => {
-				//await DataService.remove('user');
 				const userData = await DataService.get('profile');
 				if (userData) {
 					setUser(userData);
