@@ -10,7 +10,7 @@ export default function DonationHistory() {
 	const fetchDonations = () => {
 		getUserInfo()
 			.then(d => {
-				setDonations(d.donor.donations_legacy);
+				setDonations(d);
 			})
 			.catch(e => {
 				addToast('Something went wrong!', {
@@ -30,20 +30,61 @@ export default function DonationHistory() {
 					{donations && donations.length > 0 ? (
 						donations.map((el, i) => {
 							return (
-								<ul key={i} className="listview image-listview mb-2">
-									<li>
-										<div className="item">
-											<div>
-												<i
-													class="fas fa-calendar-alt fa-xl mr-3"
-													style={{ color: '#cf3d3c' }}
-												></i>
-
-												{moment(el).format('ll')}
+								<div className="col-lg-4" key={i}>
+									<div className="card card-margin">
+										<div className="card-header no-border t">
+											{el.event_name ? el.event_name : ''}
+										</div>
+										<div className="card-body pt-0">
+											<div className="widget-49">
+												<div className="widget-49-title-wrapper">
+													<div className="widget-49-date-primary-large">
+														{/* <span className="widget-49-date-day">
+															{moment(el.date).format('D')}
+														</span> */}
+														<span className="widget-49-date-month">
+															{moment(el.date).format('D MMM')}
+														</span>
+														<span className="widget-49-date-day">
+															{moment(el.date).format('yyyy')}
+														</span>
+													</div>
+													<div
+														className="widget-49-meeting-info"
+														style={{
+															display: 'block',
+															float: 'right',
+															margin: '0 auto'
+														}}
+													>
+														<ul className="widget-49-meeting-points p-0">
+															<li className="widget-49-meeting-item">
+																<span>
+																	<b>
+																		<i className="fa-solid fa-location-dot mr-2"></i>
+																	</b>
+																	{el.location
+																		? el.location
+																		: el.beneficiary.address
+																		? el.beneficiary.address
+																		: ''}
+																</span>
+															</li>
+															<li className="widget-49-meeting-item">
+																<span>
+																	<b>
+																		<i className="fa-solid fa-house-chimney-medical"></i>
+																	</b>{' '}
+																	{el.beneficiary ? el.beneficiary : ''}
+																</span>
+															</li>
+														</ul>
+													</div>
+												</div>
 											</div>
 										</div>
-									</li>
-								</ul>
+									</div>
+								</div>
 							);
 						})
 					) : (

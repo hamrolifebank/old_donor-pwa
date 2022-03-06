@@ -52,6 +52,32 @@
   border-radius: 50%;
 }
 
+.widget-49 .widget-49-title-wrapper .widget-49-date-primary-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #cf3d3c;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+}
+
+.widget-49 .widget-49-title-wrapper .widget-49-date-primary-large .widget-49-date-day {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.widget-49 .widget-49-title-wrapper .widget-49-date-primary-large .widget-49-date-month {
+  color: #fff;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+
 .widget-49 .widget-49-title-wrapper .widget-49-date-primary .widget-49-date-day {
   color: #fff;
   font-weight: 500;

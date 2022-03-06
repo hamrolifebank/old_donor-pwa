@@ -7,7 +7,7 @@ export default function Index() {
 	return (
 		<>
 			<UserContextProvider>
-				<AppHeader currentMenu="Donation History" />
+				<AppHeader currentMenu="Past Donations" />
 				<DonationHistory />
 			</UserContextProvider>
 		</>
