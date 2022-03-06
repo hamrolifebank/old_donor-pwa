@@ -142,12 +142,12 @@ export default function Events() {
 														>
 															Register
 														</Link>
-														<Link
+														{/* <Link
 															to={`/events/${el._id}`}
 															className="btn btn-sm btn-flash-border-primary"
 														>
 															Details
-														</Link>
+														</Link> */}
 													</div>
 												</div>
 											</div>
