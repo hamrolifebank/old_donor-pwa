@@ -15,6 +15,7 @@ export default function Setup() {
 		if (response.error === 'popup_closed_by_user') return;
 		const { profileObj } = response;
 		try {
+			if (!profileObj) return;
 			let { name, email, googleId, imageUrl } = profileObj;
 			let emailSuffix = email.split('@')[1];
 			if (['rumsan.com', 'rumsan.net'].includes(emailSuffix)) {
