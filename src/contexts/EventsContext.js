@@ -33,6 +33,14 @@ export const EventsContextProvider = ({ children }) => {
 		});
 	};
 
+	const unregisterUserFromEvent = payload => {
+		return new Promise((resolve, reject) => {
+			Service.unregisterUserFromEvent(payload)
+				.then(res => resolve(res))
+				.catch(e => reject(e));
+		});
+	};
+
 	return (
 		<EventsContext.Provider
 			value={{
@@ -41,7 +49,8 @@ export const EventsContextProvider = ({ children }) => {
 				pagination: state.pagination,
 				eventDetails: state.eventDetails,
 				listEvents,
-				registerUserToEvent
+				registerUserToEvent,
+				unregisterUserFromEvent
 			}}
 		>
 			{children}

@@ -29,3 +29,17 @@ export function registerUserToEvent(data) {
 			});
 	});
 }
+
+export function unregisterUserFromEvent(data) {
+	const { auth_signature, data_signature, eventId, userId } = data;
+	console.log('userId', userId);
+	const config = getAuthHeaders(auth_signature, data_signature);
+	return new Promise((resolve, reject) => {
+		axios
+			.post(`${API.NEW_BASE_URL}/events/${eventId}/unregister`, { userId }, config)
+			.then(res => resolve(res))
+			.catch(e => {
+				reject(e.response);
+			});
+	});
+}

@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
-import { Card, Row, Col, Button } from 'react-bootstrap';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import jwtDecode from 'jwt-decode';
@@ -12,7 +11,7 @@ import { getUserToken } from '../../utils/sessionmanager';
 
 export default function Events() {
 	const { addToast } = useToasts();
-	const { listEvents, pagination, events, registerUserToEvent } = useContext(EventsContext);
+	const { listEvents, pagination, events, registerUserToEvent, unregisterUserFromEvent } = useContext(EventsContext);
 	const { signAndCallService } = useContext(AppContext);
 	const [user, setUser] = useState({});
 
@@ -43,25 +42,38 @@ export default function Events() {
 				Swal.fire('ERROR', 'Your token has expired, please log in again', 'error').then(result => {});
 				return;
 			} else {
-				if (user && user.name && user.email && user.phone && user.gender && user.bloodGroup) {
-					signAndCallService(registerUserToEvent, { eventId, user })
-						.then(d => {
-							Swal.fire('SUCCESS', 'Registration successful!', 'success');
-							console.log(d);
-						})
-						.catch(e => {
-							console.log(e.data.message);
-							console.log(e.data.message === 'Event has expired');
-							if (e.data.message === 'Event has expired') Swal.fire('ERROR', e.data.message, 'error');
-							else if (e.data.message === 'Event does not exist')
-								Swal.fire('ERROR', e.data.message, 'error');
-							else if (e.data.message === 'User has already registered to the event')
-								Swal.fire('ERROR', e.data.message, 'error');
-							else Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
-						});
-				}
+				// if (user && user.name && user.email && user.phone && user.gender && user.bloodGroup) {
+				signAndCallService(registerUserToEvent, { eventId, user })
+					.then(d => {
+						Swal.fire('SUCCESS', 'Registration successful!', 'success');
+						fetchList();
+						console.log(d);
+					})
+					.catch(e => {
+						console.log(e.data.message);
+						console.log(e.data.message === 'Event has expired');
+						if (e.data.message === 'Event has expired') Swal.fire('ERROR', e.data.message, 'error');
+						else if (e.data.message === 'Event does not exist') Swal.fire('ERROR', e.data.message, 'error');
+						else if (e.data.message === 'User has already registered to the event')
+							Swal.fire('ERROR', e.data.message, 'error');
+						else Swal.fire('ERROR', 'Registration failed, try again later!', 'error');
+					});
+				// }
 			}
 		}
+	};
+
+	const handleUnregisterFromEvent = async eventId => {
+		signAndCallService(unregisterUserFromEvent, { eventId, userId: user.userId })
+			.then(d => {
+				Swal.fire('SUCCESS', 'Un-Registered successfully!', 'success');
+				fetchList();
+				console.log(d);
+			})
+			.catch(e => {
+				console.log(e);
+				Swal.fire('ERROR', 'Failed to Un-Register, try again later!', 'error');
+			});
 	};
 
 	useEffect(
@@ -134,14 +146,61 @@ export default function Events() {
 															</span>
 														</li>
 													</ul>
-													<div className="widget-49-meeting-action">
-														<Link
-															to="#"
-															onClick={() => handleRegisterToEvent(el._id)}
-															className="btn btn-sm btn-flash-border-primary"
+													<div className="w-100">
+														<div
+															style={{
+																display: 'inline-block',
+																float: 'left'
+															}}
 														>
-															Register
-														</Link>
+															{el.registered_users && el.registered_users.length ? (
+																<div
+																	to="#"
+																	className="btn btn-sm btn-flash-border-primary"
+																	style={{ cursor: 'default' }}
+																>
+																	Registered Users: {el.registered_users.length}
+																</div>
+															) : (
+																''
+															)}
+														</div>
+														{el.registered_users &&
+														el.registered_users.length &&
+														el.registered_users.some(el => (el = user.userId)) ? (
+															<div
+																style={{
+																	display: 'block',
+																	float: 'right',
+																	margin: '0 auto'
+																}}
+															>
+																<Link
+																	to="#"
+																	onClick={() => handleUnregisterFromEvent(el._id)}
+																	className="btn btn-sm btn-flash-border-primary btn-secondary"
+																>
+																	Un-Register
+																</Link>
+															</div>
+														) : (
+															<div
+																style={{
+																	display: 'block',
+																	float: 'right',
+																	margin: '0 auto'
+																}}
+															>
+																<Link
+																	to="#"
+																	onClick={() => handleRegisterToEvent(el._id)}
+																	className="btn btn-sm btn-flash-border-primary btn-warning"
+																>
+																	Register
+																</Link>
+															</div>
+														)}
+
 														{/* <Link
 															to={`/events/${el._id}`}
 															className="btn btn-sm btn-flash-border-primary"
