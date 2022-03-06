@@ -126,7 +126,6 @@ export default function Main() {
 											placeholder="Enter your address"
 											value={profile.address ? profile.address : ''}
 											onChange={updateProfile}
-											required
 										/>
 										<i className="clear-input">
 											<IoCloseCircle className="ion-icon" />
@@ -143,6 +142,7 @@ export default function Main() {
 											placeholder="Enter email"
 											value={profile.email ? profile.email : ''}
 											onChange={updateProfile}
+											required
 										/>
 										<i className="clear-input">
 											<IoCloseCircle className="ion-icon" />
