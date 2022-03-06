@@ -156,7 +156,7 @@ export default function Events() {
 															{el.registered_users && el.registered_users.length ? (
 																<div
 																	to="#"
-																	className="btn btn-sm btn-flash-border-primary"
+																	className="btn btn-sm btn-flash-border-primary btn-success-no-action"
 																	style={{ cursor: 'default' }}
 																>
 																	Registered Users: {el.registered_users.length}

@@ -6638,6 +6638,21 @@ input.pwd {
 	border-color: #f5c6cb;
 }
 
+.btn-success-no-action{
+	cursor: default;
+	background: #1DCC70 !important;
+	color: #fff;
+}
+
+.btn-success-no-action:hover,
+.btn-success-no-action:focus,
+.btn-success-no-action:active,
+.btn-success-no-action.active {
+	background: #1DCC70 !important;
+	background: #1DCC70 !important;
+	color: #fff;
+}
+
 @media only screen and (max-width: 600px) {
   .card-responsive {
     width: 100%;
