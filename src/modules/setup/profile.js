@@ -181,7 +181,9 @@ export default function Main() {
 								</div>
 								<div className="form-group basic">
 									<div className="input-wrapper">
-										<label htmlFor="gender">Gender:</label>
+										<label className="label" htmlFor="gender">
+											Gender:
+										</label>
 										<select
 											name="gender"
 											className="form-control"
@@ -197,7 +199,9 @@ export default function Main() {
 									</div>
 								</div>
 								<div className="form-group basic">
-									<label htmlFor="bloodGroup">Blood Group:</label>
+									<label className="label" htmlFor="bloodGroup">
+										Blood Group:
+									</label>
 									<select
 										name="bloodGroup"
 										className="form-control"
