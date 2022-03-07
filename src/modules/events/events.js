@@ -159,7 +159,9 @@ export default function Events() {
 																	className="btn btn-sm btn-flash-border-primary btn-success-no-action"
 																	style={{ cursor: 'default' }}
 																>
-																	Registered Users: {el.registered_users.length}
+																	<i className="fa fa-users" aria-hidden="true"></i>
+																	&nbsp; Registered Users:{' '}
+																	{el.registered_users.length}
 																</div>
 															) : (
 																''
