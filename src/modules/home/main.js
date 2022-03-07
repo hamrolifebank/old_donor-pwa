@@ -46,8 +46,7 @@ export default function Main() {
 												{wallet.address}
 											</div>
 											<div className="mt-2" style={{ fontSize: 9, lineHeight: 1.5 }}>
-												This QR Code (address) is your unique identity. Use this to receive
-												digital documents, assets or verify your identity.
+												This QR Code (address) is your unique identity.
 											</div>
 										</>
 									) : (
