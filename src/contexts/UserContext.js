@@ -17,8 +17,8 @@ export const UserContextProvider = ({ children }) => {
 		return UserService.loginFacebook(payload);
 	};
 
-	const getUserInfo = () => {
-		return UserService.userInfo();
+	const getUserDonations = () => {
+		return UserService.getUserDonations();
 	};
 
 	const logOut = async () => {
@@ -48,12 +48,12 @@ export const UserContextProvider = ({ children }) => {
 				emailLogin,
 				googleLogin,
 				facebookLogin,
-				getUserInfo,
 				logOut,
 				generateOTP,
 				verifyOTP,
 				sendPneumonicsToEmail,
-				update
+				update,
+				getUserDonations
 			}}
 		>
 			{children}

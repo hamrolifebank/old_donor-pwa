@@ -4,11 +4,11 @@ import moment from 'moment';
 import { UserContext } from '../../contexts/UserContext';
 export default function DonationHistory() {
 	const { addToast } = useToasts();
-	const { getUserInfo } = useContext(UserContext);
+	const { getUserDonations } = useContext(UserContext);
 	const [donations, setDonations] = useState([]);
 
 	const fetchDonations = () => {
-		getUserInfo()
+		getUserDonations()
 			.then(d => {
 				setDonations(d);
 			})

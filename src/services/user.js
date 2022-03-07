@@ -49,7 +49,7 @@ const User = {
 		});
 	},
 
-	userInfo() {
+	getUserDonations() {
 		const userToken = getUserToken();
 		return new Promise((resolve, reject) => {
 			axios
