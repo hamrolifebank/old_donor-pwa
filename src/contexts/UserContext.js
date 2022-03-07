@@ -21,6 +21,10 @@ export const UserContextProvider = ({ children }) => {
 		return UserService.getUserDonations();
 	};
 
+	const getUserInfo = () => {
+		return UserService.getUserInfo();
+	};
+
 	const logOut = async () => {
 		await DataService.remove('user');
 		logoutUser();
@@ -53,7 +57,8 @@ export const UserContextProvider = ({ children }) => {
 				verifyOTP,
 				sendPneumonicsToEmail,
 				update,
-				getUserDonations
+				getUserDonations,
+				getUserInfo
 			}}
 		>
 			{children}

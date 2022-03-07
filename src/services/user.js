@@ -65,6 +65,22 @@ const User = {
 		});
 	},
 
+	getUserInfo() {
+		const userToken = getUserToken();
+		return new Promise((resolve, reject) => {
+			axios
+				.get(`${API.NEW_BASE_URL}/users/me`, {
+					headers: {
+						access_token: userToken
+					}
+				})
+				.then(res => {
+					resolve(res.data);
+				})
+				.catch(e => reject(e.response));
+		});
+	},
+
 	generateOTP(payload) {
 		return new Promise((resolve, reject) => {
 			axios
