@@ -38,6 +38,10 @@ export const UserContextProvider = ({ children }) => {
 		return UserService.sendPneumonicsToEmail(payload);
 	};
 
+	const update = (id, payload) => {
+		return UserService.update(id, payload);
+	};
+
 	return (
 		<UserContext.Provider
 			value={{
@@ -48,7 +52,8 @@ export const UserContextProvider = ({ children }) => {
 				logOut,
 				generateOTP,
 				verifyOTP,
-				sendPneumonicsToEmail
+				sendPneumonicsToEmail,
+				update
 			}}
 		>
 			{children}

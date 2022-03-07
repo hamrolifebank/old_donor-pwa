@@ -97,6 +97,17 @@ const User = {
 				})
 				.catch(e => reject(e.response));
 		});
+	},
+
+	update(id, payload) {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(`${API.NEW_BASE_URL}/users/${id}`, payload)
+				.then(res => {
+					resolve(res.data);
+				})
+				.catch(e => reject(e.response));
+		});
 	}
 };
 
