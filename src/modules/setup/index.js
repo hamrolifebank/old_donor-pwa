@@ -35,7 +35,8 @@ export default function Setup() {
 					await DataService.saveAddress(res.user.wallet_address);
 					await setWallet({ address: res.user.wallet_address });
 					await setHasWallet(true);
-					history.push('/');
+					window.location.href = '/'; //temporary fix
+					//history.push('/');
 				}
 			} else throw new Error('User email must be from Rumsan Group of Companies');
 		} catch (e) {
