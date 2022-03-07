@@ -98,7 +98,7 @@ export default function Profile() {
 				<div className="section mt-2">
 					<div className="profile-head d-flex justify-content-center">
 						<div className="avatar">
-							<img src={userPic} alt="avatar" className="imaged w64 rounded" />
+							<img src={userPic} alt="avatar" className="imaged w128 rounded" />
 						</div>
 					</div>
 				</div>
