@@ -6,12 +6,15 @@ import { GoogleLogin } from 'react-google-login';
 import Swal from 'sweetalert2';
 
 import APP_ID from '../../constants/clientId';
+import { UserContext } from '../../contexts/UserContext';
+import { AppContext } from '../../contexts/AppContext';
 
 export default function Setup() {
 	let history = useHistory();
+	const { googleLogin } = useContext(UserContext);
+	const { setWallet, setHasWallet } = useContext(AppContext);
 
 	const responseGoogle = async response => {
-		console.log('google response:', response);
 		if (response.error === 'popup_closed_by_user') return;
 		const { profileObj } = response;
 		try {
@@ -19,12 +22,23 @@ export default function Setup() {
 			let { name, email, googleId, imageUrl } = profileObj;
 			let emailSuffix = email.split('@')[1];
 			if (['rumsan.com', 'rumsan.net'].includes(emailSuffix)) {
-				console.log('profileObj:', profileObj);
 				await DataService.save('profile', { name, email, serviceId: googleId, imageUrl });
-				history.push('/setup/profile');
+				const profile = await DataService.get('profile');
+				const res = await googleLogin({ ...profile, socialData: { name, email, imageUrl } });
+
+				await DataService.save('profile', { ...profile, userId: res.user.id });
+				if (!res.user.wallet_address) history.push('/setup/profile');
+				else {
+					//todo -> check index db and set wallet functions for existing user
+
+					await DataService.saveWallet({ address: res.user.wallet_address });
+					await DataService.saveAddress(res.user.wallet_address);
+					await setWallet({ address: res.user.wallet_address });
+					await setHasWallet(true);
+					history.push('/');
+				}
 			} else throw new Error('User email must be from Rumsan Group of Companies');
 		} catch (e) {
-			console.log(e);
 			Swal.fire('ERROR', e.message, 'error');
 		}
 	};
