@@ -3,8 +3,6 @@ import axios from 'axios';
 import { saveUser, saveUserToken, saveUserRoles, getUserToken } from '../utils/sessionmanager';
 import DataService from './db';
 
-const userToken = getUserToken();
-
 const User = {
 	login(payload) {
 		return new Promise((resolve, reject) => {
@@ -52,6 +50,7 @@ const User = {
 	},
 
 	userInfo() {
+		const userToken = getUserToken();
 		return new Promise((resolve, reject) => {
 			axios
 				.get(`${API.NEW_BASE_URL}/users/me-history`, {
@@ -100,9 +99,14 @@ const User = {
 	},
 
 	update(id, payload) {
+		const userToken = getUserToken();
 		return new Promise((resolve, reject) => {
 			axios
-				.post(`${API.NEW_BASE_URL}/users/${id}`, payload)
+				.post(`${API.NEW_BASE_URL}/users/${id}`, payload, {
+					headers: {
+						access_token: userToken
+					}
+				})
 				.then(res => {
 					resolve(res.data);
 				})
