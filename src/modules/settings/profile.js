@@ -59,6 +59,12 @@ export default function Profile() {
 		});
 	};
 
+	const handleCancel = e => {
+		e.preventDefault();
+		setDisableInput(true);
+		fetchInfo();
+	};
+
 	const handleEdit = e => {
 		e.preventDefault();
 		setDisableInput(false);
@@ -123,9 +129,16 @@ export default function Profile() {
 									Edit
 								</button>
 								<button
+									className="btn btn-secondary mb-2 mr-2"
+									onClick={handleCancel}
+									style={{ display: disableInput ? 'none' : 'inline' }}
+								>
+									Cancel
+								</button>
+								<button
 									className="btn btn-success mb-2"
 									onClick={handleSave}
-									style={{ display: disableInput ? 'none' : 'block' }}
+									style={{ display: disableInput ? 'none' : 'inline' }}
 									type="submit"
 								>
 									Save
