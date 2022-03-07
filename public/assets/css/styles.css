@@ -6663,6 +6663,22 @@ input.pwd {
 	color: #fff;
 }
 
+.fa-primary{
+	color: #cf3d3c;
+}
+
+.fa-warning{
+	color: #FFB400;
+}
+
+.fa-secondary{
+ color: #8494A8;
+}
+
+.fa-success{
+	color: #1DCC70;
+}
+
 @media only screen and (max-width: 600px) {
   .card-responsive {
     width: 100%;
