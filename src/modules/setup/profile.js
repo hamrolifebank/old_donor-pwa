@@ -52,6 +52,7 @@ export default function Main() {
 
 	const handleAgreeTerms = e => {
 		setAgreeDonor(e.target.checked);
+		setProfile(prev => ({ ...prev, isDonor: e.target.checked }));
 		setAgree(!e.target.checked);
 	};
 
@@ -185,28 +186,32 @@ export default function Main() {
 										<option value="AB-">AB-</option>
 									</select>
 								</div>
-								<div className="form-group basic">
-									<input type="checkbox" className="mr-2" onChange={handleAgreeTerms} />
-									<label>
-										I agree to become a donor and I have read all the{' '}
-										<Link
-											onClick={() => {
-												window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
-											}}
-											target="_blank"
-										>
-											terms and conditions
-										</Link>
-										{' and '}
-										<Link
-											onClick={() => {
-												window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
-											}}
-											target="_blank"
-										>
-											privacy policies
-										</Link>
-									</label>
+								<div className="form-group basic row">
+									<div className="col-1 col-md-1">
+										<input type="checkbox" onChange={handleAgreeTerms} />
+									</div>
+									<div className="col-11 col-md-11">
+										<label>
+											I agree to become a donor and I have read all the{' '}
+											<Link
+												onClick={() => {
+													window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
+												}}
+												target="_blank"
+											>
+												terms and conditions
+											</Link>
+											{' and '}
+											<Link
+												onClick={() => {
+													window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
+												}}
+												target="_blank"
+											>
+												privacy policies
+											</Link>
+										</label>
+									</div>
 								</div>
 							</div>
 						</div>
