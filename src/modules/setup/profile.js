@@ -5,37 +5,67 @@ import { IoCloseCircle } from 'react-icons/io5';
 import { Form, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
+import Wallet from '../../utils/blockchain/wallet';
 import Loading from '../global/Loading';
 import DataService from '../../services/db';
 import { UserContext } from '../../contexts/UserContext';
+import { AppContext } from '../../contexts/AppContext';
 
 export default function Main() {
 	const history = useHistory();
-	const { generateOTP } = useContext(UserContext);
-	const [loadingMessage] = useState('Please wait, sending OTP verification code to your email');
+	const { sendPneumonicsToEmail, update: updateUser } = useContext(UserContext);
+	const { setWallet } = useContext(AppContext);
+	const [loadingMessage] = useState('Please wait, sending backup password to your email');
 	const [loadingModal, setLoadingModal] = useState(false);
 	const [agree, setAgree] = useState(true);
 	const [agreeDonor, setAgreeDonor] = useState(false);
 	const [profile, setProfile] = useState({ name: '', phone: '', address: '', email: '', gender: '', bloodGroup: '' });
 	const termsAndConditionsUrl = 'https://hamrolifebank.com/privacy-policy';
 
+	const walletCreate = async () => {
+		try {
+			setLoadingModal(true);
+			const dbProfile = await DataService.get('profile');
+
+			const res = await Wallet.create(dbProfile.phone);
+			if (res) {
+				const { wallet, encryptedWallet } = res;
+
+				setWallet(wallet);
+				await DataService.saveWallet(encryptedWallet);
+				DataService.remove('temp_passcode');
+				DataService.saveAddress(wallet.address);
+				await sendPneumonicsToEmail({ pneumonics: wallet.mnemonic.phrase, email: dbProfile.email });
+				const { name, phone, email, address, bloodGroup, gender, isDonor } = dbProfile;
+				const userRes = await updateUser(dbProfile.userId, {
+					name,
+					phone,
+					email,
+					address,
+					blood_group: bloodGroup,
+					gender,
+					is_donor: isDonor,
+					wallet_address: wallet.address
+				});
+
+				history.push('/home');
+			}
+		} catch (err) {
+			Swal.fire('ERROR', err.message, 'error');
+		} finally {
+			setLoadingModal(false);
+		}
+	};
+
 	const save = async event => {
 		event.preventDefault();
-		console.log('input profile:', profile);
-		await DataService.save('profile', profile);
+		const dbProfile = await DataService.get('profile');
+
+		await DataService.save('profile', { ...dbProfile, ...profile });
 		const pro = await DataService.get('profile');
-		console.log('db profile:', pro);
+
 		setLoadingModal(true);
-		generateOTP({ email: profile.email })
-			.then(d => {
-				setLoadingModal(false);
-				console.log('response from generate otp:', d);
-				history.push({ pathname: '/otp-verify', state: { otpDetails: d, email: profile.email } });
-			})
-			.catch(e => {
-				setLoadingModal(false);
-				Swal.fire('ERROR', 'Something Went Wrong!', 'error');
-			});
+		await walletCreate();
 	};
 
 	const updateProfile = e => {
@@ -46,7 +76,6 @@ export default function Main() {
 		formData.forEach((value, key) => (data[key] = value));
 		data.phone = data.phone.replace(/[^0-9]/g, '');
 		data.isDonor = agreeDonor;
-		console.log(data);
 		setProfile(data);
 	};
 
@@ -59,7 +88,6 @@ export default function Main() {
 	useEffect(() => {
 		(async () => {
 			let profile = await DataService.get('profile');
-			console.log('initial data in db-profile:', profile);
 			if (profile) setProfile(profile);
 		})();
 	}, []);
@@ -135,7 +163,7 @@ export default function Main() {
 								</div>
 								<div className="form-group basic">
 									<div className="input-wrapper">
-										<label className="label">Email Address</label>
+										<label className="label disabled">Email Address</label>
 										<Form.Control
 											type="email"
 											className="form-control"
@@ -144,6 +172,7 @@ export default function Main() {
 											value={profile.email ? profile.email : ''}
 											onChange={updateProfile}
 											required
+											readOnly
 										/>
 										<i className="clear-input">
 											<IoCloseCircle className="ion-icon" />
@@ -186,32 +215,35 @@ export default function Main() {
 										<option value="AB-">AB-</option>
 									</select>
 								</div>
-								<div className="form-group basic row">
-									<div className="col-1 col-md-1">
-										<input type="checkbox" onChange={handleAgreeTerms} />
-									</div>
-									<div className="col-11 col-md-11">
-										<label>
-											I agree to become a donor and I have read all the{' '}
-											<Link
-												onClick={() => {
-													window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
-												}}
-												target="_blank"
-											>
-												terms and conditions
-											</Link>
-											{' and '}
-											<Link
-												onClick={() => {
-													window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
-												}}
-												target="_blank"
-											>
-												privacy policies
-											</Link>
-										</label>
-									</div>
+								<div className="form-group basic">
+									<input
+										type="checkbox"
+										onChange={handleAgreeTerms}
+										style={{ display: 'inline', marginRight: '7px' }}
+									/>
+
+									<label style={{ display: 'inline' }}>
+										I agree to become a donor and I have read all the{' '}
+										<Link
+											onClick={() => {
+												window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
+											}}
+											target="_blank"
+											to="#"
+										>
+											terms and conditions
+										</Link>
+										{' and '}
+										<Link
+											onClick={() => {
+												window.open(termsAndConditionsUrl, '_blank', 'noopener,noreferrer');
+											}}
+											target="_blank"
+											to="#"
+										>
+											privacy policies
+										</Link>
+									</label>
 								</div>
 							</div>
 						</div>
