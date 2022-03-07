@@ -37,7 +37,6 @@ export default function Events() {
 		const decodedToken = jwtDecode(userToken);
 
 		if (userToken && userToken !== 'undefined' && userToken.length > 0) {
-			console.log('user:', user);
 			if (!isTokenValid(decodedToken.exp)) {
 				Swal.fire('ERROR', 'Your token has expired, please log in again', 'error').then(result => {});
 				return;
@@ -47,11 +46,8 @@ export default function Events() {
 					.then(d => {
 						Swal.fire('SUCCESS', 'Registration successful!', 'success');
 						fetchList();
-						console.log(d);
 					})
 					.catch(e => {
-						console.log(e.data.message);
-						console.log(e.data.message === 'Event has expired');
 						if (e.data.message === 'Event has expired') Swal.fire('ERROR', e.data.message, 'error');
 						else if (e.data.message === 'Event does not exist') Swal.fire('ERROR', e.data.message, 'error');
 						else if (e.data.message === 'User has already registered to the event')
@@ -68,10 +64,8 @@ export default function Events() {
 			.then(d => {
 				Swal.fire('SUCCESS', 'Un-Registered successfully!', 'success');
 				fetchList();
-				console.log(d);
 			})
 			.catch(e => {
-				console.log(e);
 				Swal.fire('ERROR', 'Failed to Un-Register, try again later!', 'error');
 			});
 	};
@@ -79,7 +73,6 @@ export default function Events() {
 	useEffect(
 		() => {
 			fetchList();
-			console.log(events);
 			const setInitialUserData = async () => {
 				const userData = await DataService.get('profile');
 				if (userData) {
