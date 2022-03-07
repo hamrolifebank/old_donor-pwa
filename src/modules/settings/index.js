@@ -7,7 +7,7 @@ export default function Index() {
 	return (
 		<>
 			<UserContextProvider>
-				<AppHeader currentMenu="Settings" />
+				<AppHeader currentMenu="My Profile" />
 				<Profile />
 			</UserContextProvider>
 		</>
