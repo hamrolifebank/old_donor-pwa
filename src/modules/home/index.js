@@ -14,7 +14,7 @@ import Settings from '../settings/misc';
 import Transfer from '../transfer';
 import GoogleBackup from '../misc/googleBackup';
 import Events from '../events';
-import EventDetail from '../events/details';
+// import EventDetail from '../events/details';
 import DonationHistory from '../donationHistory';
 
 function App() {
