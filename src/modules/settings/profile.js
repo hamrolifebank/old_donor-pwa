@@ -14,7 +14,7 @@ export default function Profile() {
 	const [userPic, setUserPic] = useState('/assets/img/icon/hlb-512.png');
 	const [userInfo, setUserInfo] = useState({});
 	const [disableInput, setDisableInput] = useState(true);
-	const { logOut, getUserInfo, update } = useContext(UserContext);
+	const { getUserInfo, update } = useContext(UserContext);
 
 	const fetchInfo = async () => {
 		try {
@@ -42,21 +42,6 @@ export default function Profile() {
 				autoDismiss: true
 			});
 		}
-	};
-
-	const handleLogOut = () => {
-		Swal.fire({
-			title: 'Are you sure you want to logout?',
-			showDenyButton: true,
-			confirmButtonText: 'Yes',
-			denyButtonText: `No`
-		}).then(result => {
-			/* Read more about isConfirmed, isDenied below */
-			if (result.isConfirmed) {
-				Swal.fire('Logged out!', '', 'success');
-				logOut();
-			}
-		});
 	};
 
 	const handleCancel = e => {
