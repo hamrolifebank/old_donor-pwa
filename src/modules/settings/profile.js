@@ -34,7 +34,7 @@ export default function Profile() {
 						</div>
 						<div className="in">
 							<h3 className="name">This is You</h3>
-							<h5 className="subtext">:)</h5>
+							<h5 className="subtext">:{')'}</h5>
 						</div>
 					</div>
 				</div>
