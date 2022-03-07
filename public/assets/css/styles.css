@@ -6653,6 +6653,16 @@ input.pwd {
 	color: #fff;
 }
 
+.btn-google{
+	background-color: #DB4437;
+	color: #fff;
+}
+
+.btn-email{
+	background-color: #4285F4;
+	color: #fff;
+}
+
 @media only screen and (max-width: 600px) {
   .card-responsive {
     width: 100%;

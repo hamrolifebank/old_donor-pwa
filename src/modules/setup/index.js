@@ -50,7 +50,7 @@ export default function Setup() {
 										<button
 											id="btnSetupWallet"
 											type="button"
-											className="btn btn-lg btn-block btn-success"
+											className="btn btn-lg btn-block btn-google"
 											onClick={renderProps.onClick}
 											disabled={renderProps.disabled}
 										>
@@ -74,10 +74,10 @@ export default function Setup() {
 									onClick={() => setAction('restore_gdrive')}
 									id="btnSetupWallet"
 									type="button"
-									className="btn btn-lg btn-block btn-danger mb-2"
+									className="btn btn-lg btn-block btn-email mb-2"
 								>
 									<IoLogoGoogle className="ion-icon" aria-label="Restore Using Google" />
-									Restore wallet Google Drive
+									Login Using Email
 								</button>
 							</div>
 						</div>
