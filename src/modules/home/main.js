@@ -91,14 +91,14 @@ export default function Main() {
 						className="card mb-2 d-flex flex-row align-items-center"
 						style={{ height: 50, paddingLeft: 16, paddingRight: 16 }}
 					>
-						<i class="fa fa-envelope fa-secondary mr-3" aria-hidden="true"></i>
+						<i className="fa fa-envelope fa-secondary mr-3" aria-hidden="true"></i>
 						<div>{userInfo.email}</div>
 					</div>
 					<div
 						className="card mb-2 d-flex flex-row align-items-center"
 						style={{ height: 50, paddingLeft: 16, paddingRight: 16 }}
 					>
-						<i class="fa fa-phone fa-success mr-3" aria-hidden="true"></i>
+						<i className="fa fa-phone fa-success mr-3" aria-hidden="true"></i>
 						<div>{userInfo.phone}</div>
 					</div>
 					<div className="row">
