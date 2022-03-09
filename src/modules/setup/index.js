@@ -56,8 +56,8 @@ export default function Setup() {
 					<div className="balance">
 						<div className="">
 							<div style={{ paddingLeft: 20, paddingRight: 20 }}>
-								<h2 className="value">Let's setup your wallet</h2>
-								<span className="title">Please choose one of the options to setup your wallet.</span>
+								<h2 className="value">Let's setup your account</h2>
+								<span className="title">Please choose one of the options to setup your account.</span>
 							</div>
 							<div className="card-body">
 								<GoogleLogin
@@ -85,7 +85,7 @@ export default function Setup() {
 
 								<div className="mt-2"></div>
 
-								<button
+								{/* <button
 									onClick={() => setAction('restore_gdrive')}
 									id="btnSetupWallet"
 									type="button"
@@ -93,7 +93,7 @@ export default function Setup() {
 								>
 									<IoLogoGoogle className="ion-icon" aria-label="Restore Using Google" />
 									Login Using Email
-								</button>
+								</button> */}
 							</div>
 						</div>
 					</div>
