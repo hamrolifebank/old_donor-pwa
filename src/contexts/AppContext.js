@@ -22,7 +22,6 @@ export const AppContextProvider = ({ children }) => {
 	const history = useHistory();
 
 	const initApp = useCallback(async () => {
-		DataService.addDefaultAsset(DEFAULT_TOKEN.SYMBOL, DEFAULT_TOKEN.NAME);
 		//TODO: in future check version and add action if the version is different.
 		DataService.save('version', APP_CONSTANTS.VERSION);
 		let data = await DataService.initAppData();
