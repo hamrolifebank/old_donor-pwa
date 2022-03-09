@@ -11,7 +11,7 @@ let dbInfo;
 
 export default function Profile() {
 	const { addToast } = useToasts();
-	const [userPic, setUserPic] = useState('/assets/img/icon/hlb-512.png');
+	const [userPic, setUserPic] = useState('');
 	const [userInfo, setUserInfo] = useState({});
 	const [disableInput, setDisableInput] = useState(true);
 	const { getUserInfo, update } = useContext(UserContext);
@@ -98,7 +98,15 @@ export default function Profile() {
 				<div className="section mt-2">
 					<div className="profile-head d-flex justify-content-center">
 						<div className="avatar">
-							<img src={userPic} alt="avatar" className="imaged w128 rounded" />
+							<img
+								src={userPic}
+								alt="avatar"
+								className="imaged w128 rounded"
+								onError={({ currentTarget }) => {
+									currentTarget.onerror = null; // prevents looping
+									currentTarget.src = '/assets/img/icon/hlb-512.png;';
+								}}
+							/>
 						</div>
 					</div>
 				</div>
