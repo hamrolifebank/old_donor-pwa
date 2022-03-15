@@ -3,11 +3,13 @@ import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import { AppContext } from '../../contexts/AppContext';
+import { UserContext } from '../../contexts/UserContext';
 import DataService from '../../services/db';
 
 export default function Create() {
 	let history = useHistory();
 	const { wallet } = useContext(AppContext);
+	const { googleLogin } = useContext(UserContext);
 
 	const handleCancelClick = e => {
 		e.preventDefault();
@@ -33,12 +35,21 @@ export default function Create() {
 	};
 
 	const handleSaveClick = async () => {
-		let encryptedWallet = await DataService.get('temp_encryptedWallet');
-		await DataService.saveWallet(encryptedWallet);
-		DataService.remove('temp_encryptedWallet');
-		DataService.remove('temp_passcode');
-		DataService.saveAddress(wallet.address);
-		return confirmBackup();
+		try {
+			let encryptedWallet = await DataService.get('temp_encryptedWallet');
+			await DataService.saveWallet(encryptedWallet);
+			DataService.remove('temp_encryptedWallet');
+			DataService.remove('temp_passcode');
+			DataService.saveAddress(wallet.address);
+			const profile = await DataService.get('profile');
+			const res = await googleLogin({ ...profile, walletAddress: wallet.address });
+			console.log('res:', res);
+			console.log('wallet address', wallet.address);
+			await DataService.save('profile', { ...profile, userId: res.user.id, walletAddress: wallet.address });
+			return confirmBackup();
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (

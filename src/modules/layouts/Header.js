@@ -19,8 +19,8 @@ export default function Header() {
 						</a>
 					</div>
 					<div className="pageTitle">
-						<img src="assets/img/icon/rumsan-white-72.png" width="22" alt="logo" className="logo" />
-						&nbsp; Rumsan Wallet
+						<img src="assets/img/icon/hlb-white-512.png" width="70" alt="logo" className="logo" />
+						&nbsp;<i>Hamro</i>&nbsp;LifeBank Wallet
 					</div>
 					<div className="right">
 						<a

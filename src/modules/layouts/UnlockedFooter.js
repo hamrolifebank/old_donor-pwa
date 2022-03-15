@@ -108,10 +108,10 @@ export default function UnlockedFooter() {
 							<strong>Home</strong>
 						</div>
 					</Link>
-					<Link to="/assets" className="item">
+					<Link to="/events" className="item">
 						<div className="col">
-							{useIcon('IoBriefcaseOutline')}
-							<strong>Assets</strong>
+							{useIcon('IoCalendarOutline')}
+							<strong>Events</strong>
 						</div>
 					</Link>
 					<a href="#home" className="item" id="btnScanner" onClick={handleScanModalToggle}>
@@ -119,10 +119,10 @@ export default function UnlockedFooter() {
 							<div className="action-button large">{useIcon('IoQrCodeOutline')}</div>
 						</div>
 					</a>
-					<Link to="/vault" className="item">
+					<Link to="/donation-history" className="item">
 						<div className="col">
-							{useIcon('IoDocumentOutline')}
-							<strong>DocVault</strong>
+							{useIcon('IoWaterOutline')}
+							<strong>Donation History</strong>
 						</div>
 					</Link>
 					<Link to="/profile" className="item">
